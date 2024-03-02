@@ -9,8 +9,11 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/vector-icons": "^14.0.0",
+    "@shopify/flash-list": "1.6.3",
     "expo": "^50.0.1",
     "expo-constants": "~15.4.2",
+    "expo-image": "~1.10.6",
     "expo-linking": "~6.2.1",
     "expo-router": "~3.4.1",
     "expo-splash-screen": "~0.26.1",
@@ -19,7 +22,10 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.73.2",
-    "react-native-reanimated": "~3.6.0",
+    "react-native-awesome-slider": "^2.5.1",
+    "react-native-confirmation-code-field": "^7.3.2",
+    "react-native-gesture-handler": "~2.14.0",
+    "react-native-reanimated": "~3.6.2",
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
     "react-native-web": "~0.19.6",
