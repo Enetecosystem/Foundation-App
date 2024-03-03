@@ -14,6 +14,7 @@ import {
 import Carousel from "react-native-reanimated-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 export default function WelcomePage() {
   const { width } = useWindowDimensions();
@@ -162,7 +163,13 @@ export default function WelcomePage() {
                           </View>
                         </View>
 
-                        <TouchableOpacity className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-white p-4">
+                        <TouchableOpacity
+                          onPress={() => {
+                            // Create nickname and add to db
+                            router.push("/(main)/dashboard");
+                          }}
+                          className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-white p-4"
+                        >
                           <Text className="text-center text-lg font-normal text-black">
                             Create
                           </Text>
