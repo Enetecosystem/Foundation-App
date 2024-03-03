@@ -62,6 +62,8 @@ export default function PasswordPage() {
                 className="mb-[16px] w-full rounded-md border bg-transparent px-6 py-4 placeholder:font-light placeholder:text-black focus:border-black"
               />
               <Input
+                value={confirm}
+                onChangeText={(text) => setConfirm(text)}
                 label="Confirm Password"
                 className="mb-[16px] w-full rounded-md border bg-transparent px-6 py-4 placeholder:font-light placeholder:text-black focus:border-black"
               />
@@ -75,6 +77,7 @@ export default function PasswordPage() {
                 href="/password/#"
                 onPress={(e) => {
                   e.preventDefault();
+
                   if (
                     checkPasswordStrength(password) >= 90 &&
                     password === confirm

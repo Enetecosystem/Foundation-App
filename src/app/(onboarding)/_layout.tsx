@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-// import { useColorScheme } from "nativewind";
+import { StatusBar } from "expo-status-bar";
 
 export default function OnboardingLayout() {
   // const { colorScheme } = useColorScheme();
@@ -18,6 +18,7 @@ export default function OnboardingLayout() {
         <Stack.Screen name="password" options={{}} />
         <Stack.Screen name="welcome" options={{}} />
       </Stack>
+      <StatusBar style="dark" />
     </SafeAreaProvider>
   );
 }
