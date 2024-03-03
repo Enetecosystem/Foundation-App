@@ -153,7 +153,7 @@ export default function WelcomePage() {
                               size={14}
                               color="#15BDCF"
                             />
-                            <Text className="text-wrap px-2 text-left text-start font-light text-white">
+                            <Text className="text-wrap px-2 text-start font-light text-white">
                               When creating a nickname, use only © letters,
                               numbers, and periods.{"\n"}
                               <Text className="font-normal text-[#15BDCF]">
