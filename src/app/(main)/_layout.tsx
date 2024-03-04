@@ -6,12 +6,14 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 export default function MainLayout() {
   return (
     <SafeAreaProvider>
-      <GestureHandlerRootView>
+      <GestureHandlerRootView className="flex-1">
         <Stack screenOptions={{}}>
-          <Stack.Screen options={{ headerShown: false }} />
+          <Stack.Screen name="dashboard" options={{ headerShown: false }} />
+          <Stack.Screen name="history" options={{ headerShown: false }} />
+          <Stack.Screen name="leaderboard" options={{ headerShown: false }} />
         </Stack>
       </GestureHandlerRootView>
-      <StatusBar style="dark" translucent hideTransitionAnimation="slide" />
+      <StatusBar style="dark" translucent hideTransitionAnimation="fade" />
     </SafeAreaProvider>
   );
 }
