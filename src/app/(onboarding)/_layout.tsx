@@ -8,12 +8,6 @@ export default function OnboardingLayout() {
   return (
     <SafeAreaProvider>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen
-          name="register"
-          options={{
-            headerShown: false,
-          }}
-        />
         <Stack.Screen name="otp" options={{}} />
         <Stack.Screen name="password" options={{}} />
         <Stack.Screen name="welcome" options={{}} />

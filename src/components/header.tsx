@@ -11,7 +11,7 @@ export default function Header({
 }) {
   return (
     <View
-      className="flex h-12 w-full flex-row items-center justify-between px-4"
+      className="flex h-10 w-full flex-row items-center justify-between px-4"
       style={{ marginTop: top }}
     >
       <View className="flex flex-row items-center justify-start gap-5">

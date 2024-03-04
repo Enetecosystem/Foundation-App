@@ -15,9 +15,11 @@ import Carousel from "react-native-reanimated-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useRef } from "react";
 
 export default function WelcomePage() {
   const { width } = useWindowDimensions();
+  const carouselRef = useRef(null);
   return (
     <SafeAreaView className="bg-background">
       <KeyboardAvoidingView
@@ -27,6 +29,7 @@ export default function WelcomePage() {
           <View className="min-h-screen w-full flex-1 bg-[#F5F5F5]">
             <View className="w-full">
               <Carousel
+                ref={carouselRef}
                 loop={false}
                 width={width}
                 // height={width / 2}
@@ -35,7 +38,7 @@ export default function WelcomePage() {
                 data={[...new Array(4).keys()]}
                 scrollAnimationDuration={700}
                 style={{ alignItems: "center", justifyContent: "center" }}
-                onSnapToItem={(index) => console.log("current index:", index)}
+                onSnapToItem={(index) => {}}
                 defaultIndex={0}
                 renderItem={({ index, item }) => (
                   <View className="flex flex-1 flex-col items-start justify-start px-[24px] pb-14">
@@ -126,7 +129,9 @@ export default function WelcomePage() {
                               </View>
                               <TouchableOpacity
                                 className="rounded-lg bg-white p-2"
-                                onPress={() => {}}
+                                onPress={() => {
+                                  carouselRef.current.next();
+                                }}
                               >
                                 <AntDesign
                                   name="arrowright"

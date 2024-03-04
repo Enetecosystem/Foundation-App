@@ -117,7 +117,7 @@ export default function DashboardHeader({
                         style: "destructive",
                         onPress: () => {
                           // TODO: cleanup local data and logout
-                          router.replace("/(onboarding)/register");
+                          router.replace("/(onboarding)/");
                         },
                       },
                     ]);
@@ -144,7 +144,7 @@ export default function DashboardHeader({
                           style: "destructive",
                           onPress: () => {
                             // TODO: Delete logic
-                            router.replace("/(onboarding)/register");
+                            router.replace("/(onboarding)/");
                           },
                         },
                       ],

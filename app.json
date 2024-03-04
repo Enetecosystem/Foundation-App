@@ -16,6 +16,15 @@
       ]
     ],
     "name": "enet_miner",
-    "slug": "enet_miner"
+    "slug": "enet-miner",
+    "extra": {
+      "router": {
+        "origin": "https://n"
+      },
+      "eas": {
+        "projectId": "8852539f-a61b-4ce3-90d9-52c939c8f2c3"
+      }
+    },
+    "owner": "fullsnack_mimi"
   }
 }
