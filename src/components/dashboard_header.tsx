@@ -59,7 +59,10 @@ export default function DashboardHeader({
               <View style={styles.modalView}>
                 <Pressable
                   className="my-2 flex w-full flex-row items-center justify-start gap-4"
-                  onPress={() => router.push("/(main)/history")}
+                  onPress={() => {
+                    setModalVisible(false);
+                    router.push("/(main)/history");
+                  }}
                 >
                   <MaterialIcons name="chat" size={20} color="black" />
                   <Text className="text-lg font-normal text-black">
