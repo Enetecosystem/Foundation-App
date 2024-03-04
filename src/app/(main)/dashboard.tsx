@@ -78,6 +78,10 @@ export default function DashboardPage() {
                   </Text>
                 </View>
               </TouchableOpacity>
+
+              {/* Task and boosts */}
+
+              <View className="flex w-full flex-col"></View>
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>
