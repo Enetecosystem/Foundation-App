@@ -11,6 +11,7 @@ export default function MainLayout() {
           <Stack.Screen name="dashboard" options={{ headerShown: false }} />
           <Stack.Screen name="history" options={{ headerShown: false }} />
           <Stack.Screen name="leaderboard" options={{ headerShown: false }} />
+          <Stack.Screen name="earn" options={{ headerShown: false }} />
         </Stack>
       </GestureHandlerRootView>
       <StatusBar style="dark" translucent hideTransitionAnimation="fade" />

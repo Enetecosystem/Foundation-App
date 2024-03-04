@@ -71,7 +71,10 @@ export default function DashboardHeader({
                 </Pressable>
                 <Pressable
                   className="my-2 flex w-full flex-row items-center justify-start gap-4"
-                  onPress={() => router.push("/(main)/leaderboard")}
+                  onPress={() => {
+                    router.push("/(main)/leaderboard");
+                    setModalVisible(false);
+                  }}
                 >
                   <SimpleLineIcons name="globe" size={20} color="black" />
                   <Text className="text-lg font-normal text-black">
@@ -80,7 +83,10 @@ export default function DashboardHeader({
                 </Pressable>
                 <Pressable
                   className="my-2 flex w-full flex-row items-center justify-start gap-4"
-                  onPress={() => router.push("/(main)/earn")}
+                  onPress={() => {
+                    router.push("/(main)/earn");
+                    setModalVisible(false);
+                  }}
                 >
                   <FontAwesome6 name="x-twitter" size={20} color="black" />
                   <Text className="text-lg font-normal text-black">X-Earn</Text>
@@ -155,7 +161,15 @@ export default function DashboardHeader({
                   </Text>
                 </Pressable>
                 <View className="my-8" />
-                <TouchableOpacity className="w-full items-center justify-center rounded-lg border border-black bg-transparent p-2">
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(false);
+                    Alert.alert(
+                      "Wallet connection feature is currently a work in progress",
+                    );
+                  }}
+                  className="w-full items-center justify-center rounded-lg border border-black bg-transparent p-2"
+                >
                   <Text>Connect Wallet</Text>
                 </TouchableOpacity>
               </View>
