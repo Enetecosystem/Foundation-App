@@ -12,7 +12,12 @@ export default function OnboardingLayout() {
         <Stack.Screen name="password" options={{}} />
         <Stack.Screen name="welcome" options={{}} />
       </Stack>
-      <StatusBar style="dark" />
+      <StatusBar
+        style="dark"
+        backgroundColor="black"
+        translucent
+        hideTransitionAnimation="fade"
+      />
     </SafeAreaProvider>
   );
 }

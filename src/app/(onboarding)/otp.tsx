@@ -19,7 +19,7 @@ import {
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
 import { useState } from "react";
-import { Link, Stack } from "expo-router";
+import { Link, Stack, router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Header from "@/components/header";
 
@@ -88,7 +88,11 @@ export default function OTPPage() {
             <View className="flex w-full flex-1 flex-col items-start justify-center gap-4 px-[24px]">
               <Link
                 suppressHighlighting
-                href="/password"
+                href="/otp/#"
+                onPress={(e) => {
+                  e.preventDefault();
+                  router.push("/(onboarding)/password");
+                }}
                 className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
               >
                 Continue
