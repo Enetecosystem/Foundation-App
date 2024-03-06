@@ -1,9 +1,14 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "strict": true,
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["./src/*"],
+      "@env": ["./src/env.js"],
+      "convex/generated": ["./convex/generated"]
+    },
+    "esModuleInterop": true,
+    "checkJs": true
   },
   "extends": "expo/tsconfig.base",
   "include": ["global.d.ts", "**/*.ts", "**/*.tsx"]
