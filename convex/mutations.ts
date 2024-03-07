@@ -1,4 +1,4 @@
-import { internalMutation } from "./_generated/server";
+import { internalMutation, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { nanoid } from "nanoid";
 import crons from "./crons";
@@ -49,5 +49,17 @@ export const saveUserPassword = internalMutation({
 export const startMinig = internalMutation({
   handler: async (ctx, args) => {
     // Update minedCount based on active boosts and bot level
+  },
+});
+
+// Deleting user accounts
+export const deleteAccount = mutation({
+  args: { userId: v.id("user") },
+  handler: async (ctx, args) => {
+    try {
+      await ctx.db.delete(args.userId);
+    } catch (e: any) {
+      throw new Error("Error trying to delete account");
+    }
   },
 });

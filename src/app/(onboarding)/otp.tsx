@@ -104,6 +104,8 @@ export default function OTPPage() {
                 href="/otp/#"
                 onPress={async (e) => {
                   e.preventDefault();
+                  router.push("/password");
+                  return;
 
                   // TODO: call verifyOTP action
 

@@ -14,7 +14,7 @@ export default function OnboardingLayout() {
       </Stack>
       <StatusBar
         style="dark"
-        backgroundColor="black"
+        // backgroundColor="black"
         translucent
         hideTransitionAnimation="fade"
       />

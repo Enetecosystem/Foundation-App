@@ -83,6 +83,7 @@ export default function PasswordPage() {
                 href="/password/#"
                 onPress={async (e) => {
                   e.preventDefault();
+                  return router.push("/(main)/dashboard");
 
                   if (
                     checkPasswordStrength(password) >= 90 &&

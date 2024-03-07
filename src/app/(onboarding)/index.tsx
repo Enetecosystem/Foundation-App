@@ -24,9 +24,7 @@ export default function Register() {
 
   return (
     <SafeAreaView className="bg-[#EBEBEB]">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "android" ? "height" : "position"}
-      >
+      <KeyboardAvoidingView behavior={"position"}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView className="min-h-screen w-full bg-white">
             <View className="flex h-auto w-full flex-col items-center justify-center rounded-b-[35px] bg-[#EBEBEB] py-10">
@@ -65,7 +63,7 @@ export default function Register() {
                 onPress={async (e) => {
                   try {
                     e.preventDefault();
-                    return router.push("/(main)/dashboard");
+                    return router.push("/otp");
 
                     // TODO: call server convex function to store users email and referral then send OTP to email address
                     const userId = await initiateUser({

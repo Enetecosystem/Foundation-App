@@ -29,7 +29,7 @@ export default function TaskBoostCard() {
   const [sliderIndex, setSliderIndex] = useState(0);
 
   return (
-    <View className="flex w-full flex-col gap-4">
+    <View className="mb-32 flex w-full flex-col gap-4">
       <View className="flex w-full flex-row rounded-md bg-white p-2">
         <TouchableOpacity
           style={{
@@ -90,7 +90,6 @@ export default function TaskBoostCard() {
           justifyContent: "center",
           borderRadius: 20,
           overflow: "scroll",
-          marginBottom: 40,
         }}
         autoPlay={false}
         width={width * 0.95}

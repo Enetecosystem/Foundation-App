@@ -1,4 +1,4 @@
-import { internalQuery } from "./_generated/server";
+import { action, internalQuery, query } from "./_generated/server";
 import { v } from "convex/values";
 // import { DataModel } from "./_generated/dataModel"
 
@@ -17,5 +17,35 @@ export const getOTPSecret = internalQuery({
     }
 
     return user?.otpSecret as string;
+  },
+});
+
+// Get user details to be rendered on main dashboard
+export const getUserDetails = query({
+  args: { userId: v.id("user") },
+  handler: async ({ db }, { userId }) => {
+    return await db.get(userId);
+  },
+});
+
+// Get leader board filtered and ordered by XP
+export const getLeaderBoard = query({
+  handler: async ({ db }) => {
+    return await db
+      .query("user")
+      .filter((q) => q.gte(q.field("xpCount"), 100))
+      .order("desc")
+      .collect();
+  },
+});
+
+export const getHistory = query({
+  args: { userId: v.id("user") },
+  handler: async ({ db }, { userId }) => {
+    return await db
+      .query("activity")
+      .filter((q) => q.eq(q.field("userId"), userId))
+      .order("desc")
+      .take(100);
   },
 });

@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import {
   TouchableOpacity,
@@ -18,6 +18,9 @@ import {
   FontAwesome6,
   AntDesign,
 } from "@expo/vector-icons";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/generated/api";
+import { Id } from "@/convex/generated/dataModel";
 
 export default function DashboardHeader({
   top,
@@ -30,6 +33,9 @@ export default function DashboardHeader({
   modalVisible: boolean;
   setModalVisible: Dispatch<SetStateAction<boolean>>;
 }) {
+  const params = useLocalSearchParams();
+  const deleteAccount = useMutation(api.mutations.deleteAccount);
+
   return (
     <View
       className="flex w-full flex-row items-center justify-between px-4 py-4"
@@ -144,8 +150,11 @@ export default function DashboardHeader({
                         {
                           text: "Delete",
                           style: "destructive",
-                          onPress: () => {
+                          onPress: async () => {
                             // TODO: Delete logic
+                            await deleteAccount({
+                              userId: params?.userId as Id<"user">,
+                            });
                             router.replace("/(onboarding)/");
                           },
                         },
