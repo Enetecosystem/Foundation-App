@@ -14,6 +14,11 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as crons from "../crons.js";
+import type * as mutations from "../mutations.js";
+import type * as novu from "../novu.js";
+import type * as onboarding from "../onboarding.js";
+import type * as queries from "../queries.js";
 import type * as tasks from "../tasks.js";
 
 /**
@@ -25,6 +30,11 @@ import type * as tasks from "../tasks.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  crons: typeof crons;
+  mutations: typeof mutations;
+  novu: typeof novu;
+  onboarding: typeof onboarding;
+  queries: typeof queries;
   tasks: typeof tasks;
 }>;
 export declare const api: FilterApi<
