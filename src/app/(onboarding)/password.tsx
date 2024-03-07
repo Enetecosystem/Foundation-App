@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import Input from "@/components/input";
-import { Link, Stack, router } from "expo-router";
+import { Link, Stack, router, useLocalSearchParams } from "expo-router";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -18,6 +18,9 @@ import { useSharedValue } from "react-native-reanimated";
 import { Slider } from "react-native-awesome-slider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
+import { useAction } from "convex/react";
+import { api } from "@/convex/generated/api";
+import { Id } from "@/convex/generated/dataModel";
 
 const checkPasswordStrength = (password: string): number => {
   const regex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/;
@@ -34,9 +37,12 @@ const checkPasswordStrength = (password: string): number => {
 };
 
 export default function PasswordPage() {
+  const params = useLocalSearchParams();
   const { top } = useSafeAreaInsets();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+
+  const storePassword = useAction(api.onboarding.storePassword);
 
   return (
     <SafeAreaView className="bg-background">
@@ -73,16 +79,21 @@ export default function PasswordPage() {
 
             <View className="flex w-full flex-1 flex-col items-start justify-center px-[24px]">
               <Link
-                suppressHighlighting
+                // suppressHighlighting
                 href="/password/#"
-                onPress={(e) => {
+                onPress={async (e) => {
                   e.preventDefault();
 
                   if (
                     checkPasswordStrength(password) >= 90 &&
                     password === confirm
                   ) {
-                    router.push("/welcome");
+                    // TODO: Call mutation to save user password
+                    await storePassword({
+                      userId: params?.userId as Id<"user">,
+                      password: password.trim(),
+                    });
+                    router.push({ pathname: "/(onboarding)/welcome", params });
                   } else {
                     Alert.alert(
                       "Password error",

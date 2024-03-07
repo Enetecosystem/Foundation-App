@@ -15,7 +15,7 @@ export default function Layout() {
   return (
     <ConvexProvider client={convex}>
       <Stack
-        // initialRouteName="/(onboarding)/"
+        initialRouteName="/(onboarding)/"
         // initialRouteName="tasks"
         screenOptions={{ headerShown: false }}
       >

@@ -1,8 +1,9 @@
 import DashboardHeader from "@/components/dashboard_header";
 import { Overview } from "@/components/overview_card";
 import { StatsCard } from "@/components/stats_card";
+import TaskBoostCard from "@/components/task_boost_card";
 import { Image } from "expo-image";
-import { Link, Stack, router } from "expo-router";
+import { Link, Stack, router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import {
   Keyboard,
@@ -12,14 +13,17 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Modal,
+  // Modal,
   View,
+  ScrollView,
+  useWindowDimensions,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function DashboardPage() {
+  const params = useLocalSearchParams();
   const { top } = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <SafeAreaView className="bg-background">
@@ -27,7 +31,11 @@ export default function DashboardPage() {
         behavior={Platform.OS === "android" ? "height" : "padding"}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView className="min-h-screen w-full bg-[#F5F5F5]">
+          <ScrollView
+            className="min-h-screen w-full bg-[#F5F5F5]"
+            contentInsetAdjustmentBehavior="scrollableAxes"
+            style={{ height: height - top }}
+          >
             <Stack.Screen
               options={{
                 headerShown: true,
@@ -36,12 +44,13 @@ export default function DashboardPage() {
                     top={top}
                     modalVisible={modalVisible}
                     setModalVisible={setModalVisible}
+                    nickname={params?.nickname as string}
                   />
                 ),
               }}
             />
 
-            <View className="flex w-full flex-col px-[20px] py-4">
+            <View className="flex h-full w-full flex-col px-[20px] py-4 pb-20">
               <StatsCard
                 minedCount={48500.71}
                 miningRate={25}
@@ -80,8 +89,9 @@ export default function DashboardPage() {
               </TouchableOpacity>
 
               {/* Task and boosts */}
-
-              <View className="flex w-full flex-col"></View>
+              <View className="mt-4 w-full flex-1">
+                <TaskBoostCard />
+              </View>
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>

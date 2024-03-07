@@ -18,14 +18,19 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
-import { useState } from "react";
-import { Link, Stack, router } from "expo-router";
+import { useEffect, useState } from "react";
+import { Link, Stack, router, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Header from "@/components/header";
+import { useAction } from "convex/react";
+import { api } from "@/convex/generated/api";
+import { Id } from "@/convex/generated/dataModel";
 
 const CELL_COUNT = 6;
 
 export default function OTPPage() {
+  const params = useLocalSearchParams();
+
   const [value, setValue] = useState("");
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -34,6 +39,14 @@ export default function OTPPage() {
   });
 
   const { top } = useSafeAreaInsets();
+
+  // verify otp functon
+  const verifyUserOTP = useAction(api.onboarding.verifyUserOTP);
+  const resendOTP = useAction(api.onboarding.resendOTPCode);
+
+  useEffect(() => {
+    console.log(params, ":::Local params");
+  }, []);
 
   return (
     <SafeAreaView className="bg-background">
@@ -56,7 +69,7 @@ export default function OTPPage() {
                 style={{ width: 74, height: 74, alignItems: "center" }}
               />
               <Text className="text-center text-2xl font-medium tracking-normal">
-                We’ve sent a 6-digit OTP to johndoe@gmail.com
+                We’ve sent a 6-digit OTP to {params?.email}
               </Text>
             </View>
 
@@ -87,11 +100,32 @@ export default function OTPPage() {
             </View>
             <View className="flex w-full flex-1 flex-col items-start justify-center gap-4 px-[24px]">
               <Link
-                suppressHighlighting
+                // suppressHighlighting
                 href="/otp/#"
-                onPress={(e) => {
+                onPress={async (e) => {
                   e.preventDefault();
-                  router.push("/(onboarding)/password");
+
+                  // TODO: call verifyOTP action
+
+                  if (!value.length) {
+                    return Alert.alert(
+                      "Onbaording error",
+                      "Valid OTP code must be entered",
+                    );
+                  }
+
+                  const isValid = await verifyUserOTP({
+                    userId: params?.userId as Id<"user">,
+                    otp: value,
+                  });
+
+                  console.log(isValid, value, ":::IsVald OTP");
+
+                  if (isValid) {
+                    router.push({ pathname: "/(onboarding)/password", params });
+                  } else {
+                    return Alert.alert("Onboarding error", "Invalid OTP code");
+                  }
                 }}
                 className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
               >
@@ -99,10 +133,16 @@ export default function OTPPage() {
                 {/* <Text className=""></Text> */}
               </Link>
               <Link
-                suppressHighlighting
+                // suppressHighlighting
                 href="/otp/#"
-                onPress={(e) => {
+                onPress={async (e) => {
                   e.preventDefault();
+
+                  await resendOTP({
+                    email: params?.email as string,
+                    userId: params?.userId as string,
+                  });
+
                   Alert.alert(
                     "Resending OTP",
                     "OTP has been sent to the provided email address, check and re-input",

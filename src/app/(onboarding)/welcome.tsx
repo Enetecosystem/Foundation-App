@@ -10,16 +10,26 @@ import {
   Text,
   useWindowDimensions,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { useRef } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { useRef, useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/generated/api";
+import { Id } from "@/convex/generated/dataModel";
 
 export default function WelcomePage() {
+  const params = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const carouselRef = useRef(null);
+
+  const [nickname, setNickname] = useState("");
+
+  const storeNickname = useMutation(api.onboarding.storeNickname);
+
   return (
     <SafeAreaView className="bg-background">
       <KeyboardAvoidingView
@@ -41,7 +51,10 @@ export default function WelcomePage() {
                 onSnapToItem={(index) => {}}
                 defaultIndex={0}
                 renderItem={({ index, item }) => (
-                  <View className="flex flex-1 flex-col items-start justify-start px-[24px] pb-14">
+                  <View
+                    className="flex flex-1 flex-col items-start justify-start px-[24px] pb-14"
+                    key={index}
+                  >
                     <View className="my-6 flex flex-row items-center justify-center gap-1 overflow-hidden py-1">
                       {/* Status bar */}
                       {Array.from({ length: 4 }).map((_, idx) => (
@@ -54,15 +67,43 @@ export default function WelcomePage() {
                         />
                       ))}
                     </View>
-                    {index < 3 && (
+
+                    {index === 0 && (
                       <View>
                         <Text className="text-left text-xl font-medium">
-                          Welcome to Star Mining {item}
+                          Welcome to Enetecosystem
                         </Text>
                         <Text className="text-left text-lg font-light">
-                          Ice is a digital currency that you can earn with your
-                          phone. ice is owned and operated by every day users
-                          like yourself.
+                          A decentralised blockchain ecosystem, building
+                          innovative solutions to embrace the rapidly advancing
+                          digital landscape.
+                        </Text>
+                      </View>
+                    )}
+
+                    {index === 1 && (
+                      <View>
+                        <Text className="text-left text-xl font-medium">
+                          Kickstarting our MVP program
+                        </Text>
+                        <Text className="text-left text-lg font-light">
+                          The "Most Valuable Person of the Month/Year" is an
+                          exciting program within our ecosystem designed to
+                          recognize and reward community members or individual
+                          who actively contribute to the growth and success of
+                          the MVP program.
+                        </Text>
+                      </View>
+                    )}
+                    {index === 2 && (
+                      <View>
+                        <Text className="text-left text-xl font-medium">
+                          Mining and Xp
+                        </Text>
+                        <Text className="text-left text-lg font-light">
+                          There are 2 ways you can earn $EN before launching.
+                          Through Mining on this App and earning Xp by
+                          performing ecosystem tasks.
                         </Text>
                       </View>
                     )}
@@ -130,7 +171,7 @@ export default function WelcomePage() {
                               <TouchableOpacity
                                 className="rounded-lg bg-white p-2"
                                 onPress={() => {
-                                  carouselRef.current.next();
+                                  carouselRef.current!.next();
                                 }}
                               >
                                 <AntDesign
@@ -149,6 +190,8 @@ export default function WelcomePage() {
                       <View className="flex h-4/6 w-full flex-col items-center justify-between rounded-3xl bg-black px-4 py-8">
                         <View className="w-full gap-2">
                           <Input
+                            value={nickname}
+                            onChangeText={setNickname}
                             placeholder="Nickname"
                             className="mb-1 w-full rounded-xl border bg-slate-100 px-6 py-4 placeholder:font-light placeholder:text-black focus:border-black"
                           />
@@ -169,9 +212,28 @@ export default function WelcomePage() {
                         </View>
 
                         <TouchableOpacity
-                          onPress={() => {
-                            // Create nickname and add to db
-                            router.push("/(main)/dashboard");
+                          onPress={async () => {
+                            try {
+                              // Create nickname and add to db
+                              if (!nickname.length) {
+                                return Alert.alert(
+                                  "Onboarding error",
+                                  "Nickname must be added",
+                                );
+                              }
+
+                              await storeNickname({
+                                userId: params?.userId as Id<"user">,
+                                nickname: nickname.trim(),
+                              });
+
+                              router.push({
+                                pathname: "/(main)/dashboard",
+                                params: { ...params, nickname },
+                              });
+                            } catch (e: any) {
+                              return Alert.alert(e.message ?? e.toString());
+                            }
                           }}
                           className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-white p-4"
                         >
