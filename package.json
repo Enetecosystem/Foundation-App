@@ -12,6 +12,7 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
     "@novu/node": "^0.23.1",
+    "@react-native-async-storage/async-storage": "1.21.0",
     "@shopify/flash-list": "1.6.3",
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^2.4.3",
