@@ -21,10 +21,12 @@ import {
 
 export default function DashboardHeader({
   top,
+  nickname,
   modalVisible,
   setModalVisible,
 }: {
   top: number;
+  nickname: string;
   modalVisible: boolean;
   setModalVisible: Dispatch<SetStateAction<boolean>>;
 }) {
@@ -37,7 +39,7 @@ export default function DashboardHeader({
         <UserAvatar
           source="../../../assets/main/avatar.png"
           alt="avatar"
-          nickname="Johcee"
+          nickname={nickname ?? "Johcee"}
         />
         <TouchableOpacity className="p-2" onPress={() => setModalVisible(true)}>
           <Ionicons name="grid-outline" size={24} color="#D9D8D8" />

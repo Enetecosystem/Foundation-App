@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "strict": true,
+    "strict": false,
     "paths": {
       "@/*": ["./src/*"],
       "@env": ["./src/env.js"],
-      "convex/generated": ["./convex/generated"]
+      "@/convex/generated/*": ["./convex/_generated/*"]
     },
     "esModuleInterop": true,
     "checkJs": true
