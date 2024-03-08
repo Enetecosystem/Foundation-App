@@ -5,6 +5,7 @@
   "scripts": {
     "start": "EXPO_NO_DOTENV=1 bunx expo start -c",
     "start:local": "APP_ENV=local bun run start",
+    "build:eas": "APP_ENV=staging eas build --platform android --profile preview",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
