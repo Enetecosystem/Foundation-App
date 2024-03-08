@@ -69,7 +69,8 @@ export default function OTPPage() {
                 style={{ width: 74, height: 74, alignItems: "center" }}
               />
               <Text className="text-center text-2xl font-medium tracking-normal">
-                We’ve sent a 6-digit OTP to {params?.email}
+                We’ve sent a 6-digit OTP to{"\n"}
+                {params?.email}
               </Text>
             </View>
 
@@ -104,11 +105,8 @@ export default function OTPPage() {
                 href="/otp/#"
                 onPress={async (e) => {
                   e.preventDefault();
-                  router.push("/password");
-                  return;
 
                   // TODO: call verifyOTP action
-
                   if (!value.length) {
                     return Alert.alert(
                       "Onbaording error",
@@ -120,8 +118,6 @@ export default function OTPPage() {
                     userId: params?.userId as Id<"user">,
                     otp: value,
                   });
-
-                  console.log(isValid, value, ":::IsVald OTP");
 
                   if (isValid) {
                     router.push({ pathname: "/(onboarding)/password", params });
@@ -139,7 +135,7 @@ export default function OTPPage() {
                 href="/otp/#"
                 onPress={async (e) => {
                   e.preventDefault();
-
+                  // TODO: Resend OTP
                   await resendOTP({
                     email: params?.email as string,
                     userId: params?.userId as string,
@@ -149,7 +145,6 @@ export default function OTPPage() {
                     "Resending OTP",
                     "OTP has been sent to the provided email address, check and re-input",
                   );
-                  // TODO: Resend OTP
                 }}
                 className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-transparent p-4 text-center text-lg font-normal text-black transition-colors"
               >

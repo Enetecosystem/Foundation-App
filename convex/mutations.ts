@@ -1,8 +1,12 @@
-import { internalMutation, mutation } from "./_generated/server";
+import {
+  action,
+  internalAction,
+  internalMutation,
+  mutation,
+} from "./_generated/server";
 import { v } from "convex/values";
-import { nanoid } from "nanoid";
-import crons from "./crons";
 import { internal } from "./_generated/api";
+import { differenceInHours } from "date-fns";
 
 export const storeEmail = internalMutation({
   args: { email: v.string(), referreeCode: v.optional(v.string()) },
@@ -11,9 +15,23 @@ export const storeEmail = internalMutation({
     const userId = await ctx.db.insert("user", {
       email: args.email,
       referreeCode: args.referreeCode,
-      referralCode: nanoid(5).toUpperCase(),
       minedCount: 0,
-      miningRate: 2,
+      miningRate: 2.0,
+      mineActive: false,
+      referralCount: 0,
+      mineHours: 6,
+      redeemableCount: 0,
+      xpCount: 0,
+      speedBoost: {
+        isActive: false,
+        rate: 2,
+        level: 1,
+      },
+      botBoost: {
+        isActive: false,
+        hours: 3,
+        level: 1,
+      },
     });
 
     console.log(userId, ":::User id");
@@ -52,6 +70,41 @@ export const startMinig = internalMutation({
   },
 });
 
+export const addWeeklyTopRankedActivity = internalMutation({
+  args: { userIds: v.array(v.id("user")) },
+  handler: async ({ db }, { userIds }) => {
+    for (const userId of userIds) {
+      await db.insert("activity", {
+        type: "rank",
+        message: `You ranked in the top 3 globally for this week`,
+        userId,
+      });
+    }
+  },
+});
+
+export const weeklyLeaderBoarCheck = internalAction({
+  handler: async ({ runQuery, runMutation, runAction }) => {
+    // Check leaderboard and update activites for users who are top 3
+    const weeksTopRankUsers = await runQuery(
+      internal.queries.getWeeklyTopRanked,
+    );
+
+    // Add activities
+    await runMutation(internal.mutations.addWeeklyTopRankedActivity, {
+      userIds: weeksTopRankUsers.map((user) => user?._id),
+    });
+
+    // Send out a mail to top
+    for (const user of weeksTopRankUsers) {
+      await runAction(internal.novu.triggerLeaderboardWorkflow, {
+        userId: user._id,
+        email: user.email,
+      });
+    }
+  },
+});
+
 // Deleting user accounts
 export const deleteAccount = mutation({
   args: { userId: v.id("user") },
@@ -61,5 +114,68 @@ export const deleteAccount = mutation({
     } catch (e: any) {
       throw new Error("Error trying to delete account");
     }
+  },
+});
+
+// Mining trigger
+export const triggerMining = action({
+  args: { userId: v.id("user") },
+  handler: async ({ runMutation }, { userId }) => {
+    await runMutation(internal.mutations.mine, { userId });
+  },
+});
+
+export const mine = internalMutation({
+  args: { userId: v.id("user") },
+  handler: async ({ db, scheduler }, { userId }) => {
+    const user = await db.get(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.mineActive) {
+      // Check if time is still within min rage
+      if (
+        differenceInHours(Date.now(), new Date(user?.mineStartTime as number), {
+          roundingMethod: "floor",
+        }) < user.mineHours
+      ) {
+        await db.patch(userId, {
+          redeemableCount:
+            user.miningRate *
+            differenceInHours(
+              Date.now(),
+              new Date(user?.mineStartTime as number),
+            ),
+        });
+
+        await scheduler.runAfter(1000 * 60 * 60, internal.mutations.mine, {
+          userId,
+        });
+        return;
+      } else {
+        // Cancel mine and reset also check for active boosts
+
+        await db.patch(userId, {
+          mineActive: false,
+          redeemableCount:
+            user.miningRate *
+            differenceInHours(
+              Date.now(),
+              new Date(user?.mineStartTime as number),
+              { roundingMethod: "floor" },
+            ),
+        });
+
+        return;
+      }
+    }
+
+    // Start
+    await db.patch(userId, { mineActive: true, mineStartTime: Date.now() });
+    await scheduler.runAfter(1000 * 60 * 60, internal.mutations.mine, {
+      userId,
+    });
   },
 });

@@ -1,7 +1,6 @@
 const z = require("zod");
 
 const path = require("path");
-console.log(process.env.APP_ENV, ":::APP_ENV");
 
 const APP_ENV = process.env.APP_ENV ?? "development";
 const envPath = path.resolve(__dirname, `.env.${APP_ENV}`);

@@ -21,6 +21,7 @@ import {
 import { useMutation } from "convex/react";
 import { api } from "@/convex/generated/api";
 import { Id } from "@/convex/generated/dataModel";
+import { removeData } from "@/storageUtils";
 
 export default function DashboardHeader({
   top,
@@ -69,7 +70,7 @@ export default function DashboardHeader({
                   className="my-2 flex w-full flex-row items-center justify-start gap-4"
                   onPress={() => {
                     setModalVisible(false);
-                    router.push("/(main)/history");
+                    router.push({ pathname: "/(main)/history", params });
                   }}
                 >
                   <MaterialIcons name="chat" size={20} color="black" />
@@ -80,7 +81,7 @@ export default function DashboardHeader({
                 <Pressable
                   className="my-2 flex w-full flex-row items-center justify-start gap-4"
                   onPress={() => {
-                    router.push("/(main)/leaderboard");
+                    router.push({ pathname: "/(main)/leaderboard", params });
                     setModalVisible(false);
                   }}
                 >
@@ -125,6 +126,7 @@ export default function DashboardHeader({
                         style: "destructive",
                         onPress: () => {
                           // TODO: cleanup local data and logout
+                          removeData("@enet-store/user");
                           router.replace("/(onboarding)/");
                         },
                       },

@@ -10,14 +10,14 @@ import bcrypt from "bcryptjs";
 const generateOTPCode = customAlphabet("0123456789", 6);
 
 export const initializeNewUser = action({
-  args: { email: v.string(), referral: v.optional(v.string()) },
+  args: { email: v.string(), referreeCode: v.optional(v.string()) },
   handler: async (ctx, args): Promise<string> => {
     // TODO: handle oslo OTP creation and novu email workflow trigger
     const userId: Id<"user"> = await ctx.runMutation(
       internal.mutations.storeEmail,
       {
         email: args.email,
-        referreeCode: args.referral,
+        referreeCode: args.referreeCode,
       },
     );
 
@@ -92,9 +92,66 @@ export const storePassword = action({
   },
 });
 
+export const loginUser = action({
+  args: { email: v.string(), password: v.string() },
+  handler: async ({ runQuery }, { email, password }) => {
+    try {
+      const user: any = await runQuery(internal.queries.getUserWithEmail, {
+        email,
+      });
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      // Compare password
+      if (await bcrypt.compare(password, user?.password)) {
+        return user;
+      } else {
+        throw new Error("Invalid email pr password");
+      }
+    } catch (e: any) {
+      throw new Error("Issue with getting user");
+    }
+  },
+});
+
 export const storeNickname = mutation({
   args: { nickname: v.string(), userId: v.id("user") },
   handler: async (ctx, { nickname, userId }) => {
-    await ctx.db.patch(userId, { nickname: nickname });
+    try {
+      const referralCode = generateReferralCode();
+
+      await ctx.db.patch(userId, { nickname: nickname, referralCode });
+
+      // Increment users referree count
+      // Get new user data
+      const user = await ctx.db.get(userId);
+      const referree = await ctx.db
+        .query("user")
+        .filter((q) => q.eq(q.field("referralCode"), user?.referreeCode))
+        .unique();
+
+      if (referree) {
+        // Patch referree count
+        await ctx.db.patch(referree?._id as Id<"user">, {
+          referralCount: Number(referree?.referralCount) + 1,
+          xpCount: 23 + referree.xpCount,
+        });
+        await ctx.db.insert("activity", {
+          userId: referree?._id,
+          message: `${user?.nickname} Joined using your referral code`,
+          extra: "23",
+          type: "xp", // Can be xp and rank
+        });
+      }
+    } catch (e: any) {
+      throw new Error("Could not store nickname");
+    }
   },
 });
+
+const generateReferralCode = (): string => {
+  const nanoid = customAlphabet("1234567890abcdef", 6);
+  const referralCode = nanoid().toUpperCase();
+  return referralCode;
+};

@@ -14,13 +14,34 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAction } from "convex/react";
 import { api } from "@/convex/generated/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getData, storeData } from "@/storageUtils";
 
 export default function Register() {
   const [email, setEmail] = useState("");
-  const [referral, setReferral] = useState("");
+  const [referreeCode, setReferreeCode] = useState("");
+  const [password, setPassword] = useState("");
+  const [userIsOnboarded, setUserIsOnbaorded] = useState(false);
 
   const initiateUser = useAction(api.onboarding.initializeNewUser);
+  const loginUser = useAction(api.onboarding.loginUser);
+
+  useEffect(() => {
+    getUserLocalData();
+    async function getUserLocalData() {
+      try {
+        const isOnboarded = await getData("@enet-store/isOnboarded");
+        console.log(isOnboarded, ":::isOnboarded");
+        if (!isOnboarded) {
+          setUserIsOnbaorded(false);
+          return;
+        }
+        setUserIsOnbaorded(true);
+      } catch (e: any) {
+        return Alert.alert(e.message ?? e.toString());
+      }
+    }
+  }, [userIsOnboarded]);
 
   return (
     <SafeAreaView className="bg-[#EBEBEB]">
@@ -48,11 +69,22 @@ export default function Register() {
                 className="mb-[16px] w-full rounded-md bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
                 onChangeText={(text) => setEmail(text)}
               />
-              <TextInput
-                placeholder="Referral"
-                className="w-full rounded-md bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
-                onChangeText={(text) => setReferral(text)}
-              />
+              {!userIsOnboarded && (
+                <TextInput
+                  placeholder="Referral"
+                  className="w-full rounded-md bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
+                  value={referreeCode}
+                  onChangeText={(text) => setReferreeCode(text)}
+                />
+              )}
+              {userIsOnboarded && (
+                <TextInput
+                  placeholder="Password"
+                  value={password}
+                  className="w-full rounded-md bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
+                  onChangeText={(text) => setPassword(text)}
+                />
+              )}
             </View>
 
             <View className="flex h-auto w-full flex-col items-center justify-center px-[20px]">
@@ -63,15 +95,40 @@ export default function Register() {
                 onPress={async (e) => {
                   try {
                     e.preventDefault();
-                    return router.push("/otp");
+                    // return router.push("/(main)/history");
+                    //
+
+                    // TODO: If user is onboarded already, then login
+                    if (userIsOnboarded) {
+                      if (!email.length || !password.length) {
+                        return Alert.alert(
+                          "Onbaording error",
+                          "Valid email or password must be entered",
+                        );
+                      }
+
+                      const user = await loginUser({ email, password });
+                      const userId = user?._id;
+                      // Store data to local storage
+                      await storeData("@enet-store/user", { email, userId });
+                      return router.push({
+                        pathname: "/(main)/dashboard",
+                        params: { email, userId, nickname: user?.nickname },
+                      });
+                    }
 
                     // TODO: call server convex function to store users email and referral then send OTP to email address
                     const userId = await initiateUser({
-                      referral: !!referral.length ? referral : undefined,
+                      referreeCode: !!referreeCode.length
+                        ? referreeCode.trim()
+                        : undefined,
                       email: email.trim(),
                     });
 
                     console.log(userId, ":::Result of stored user");
+
+                    // Store data to local storage
+                    await storeData("@enet-store/user", { email, userId });
 
                     router.push({
                       pathname: "/(onboarding)/otp",
@@ -82,7 +139,7 @@ export default function Register() {
                   }
                 }}
               >
-                Signup
+                {userIsOnboarded ? "Login" : "Signup"}
                 {/* <Text className=""></Text> */}
               </Link>
 

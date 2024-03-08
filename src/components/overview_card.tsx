@@ -1,21 +1,26 @@
-import { ImageBackground } from "expo-image";
+// import { ImageBackground } from "expo-image";
 import { FC } from "react";
 import { Alert, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
 import { Ionicons, FontAwesome5, Feather } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
 
 interface IOverviewProps {
   referrals: number;
   totalUsers: number;
   globalRank: number;
-  referralLink: string;
+  referralCode: string;
 }
 export const Overview: FC<IOverviewProps> = ({
   referrals,
   totalUsers,
   globalRank,
-  referralLink,
+  referralCode,
 }) => {
+  const copyToClipboard = async () => {
+    await Clipboard.setStringAsync(referralCode);
+  };
+
   return (
     <View className="h-[160px] rounded-xl bg-[#000000]">
       {/* States design */}
@@ -51,10 +56,15 @@ export const Overview: FC<IOverviewProps> = ({
 
         <View className="flex w-full flex-row items-center justify-between gap-6 px-8">
           <Text className="text-lg font-light text-[#989898]">
-            Referral link: {referralLink}
+            Referral Code: {referralCode}
           </Text>
 
-          <TouchableOpacity onPress={() => Alert.alert("Link copied")}>
+          <TouchableOpacity
+            onPress={() => {
+              copyToClipboard();
+              Alert.alert("Link copied");
+            }}
+          >
             <Feather name="copy" size={18} color="white" />
           </TouchableOpacity>
         </View>

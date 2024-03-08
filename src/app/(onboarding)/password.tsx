@@ -14,9 +14,9 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { useSharedValue } from "react-native-reanimated";
+import Animated, { useSharedValue } from "react-native-reanimated";
 import { Slider } from "react-native-awesome-slider";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+// import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
 import { useAction } from "convex/react";
 import { api } from "@/convex/generated/api";
@@ -83,7 +83,6 @@ export default function PasswordPage() {
                 href="/password/#"
                 onPress={async (e) => {
                   e.preventDefault();
-                  return router.push("/(main)/dashboard");
 
                   if (
                     checkPasswordStrength(password) >= 90 &&
@@ -126,59 +125,51 @@ function PasswordValidation({ password }: { password: string }) {
   }, [password]);
 
   return (
-    <GestureHandlerRootView className="w-full">
-      <View className="flex w-full flex-col items-start justify-center gap-3">
-        {/* Validate password strength here */}
-        <Text className="text-black">Password strength</Text>
-        <Slider
-          progress={progress}
-          minimumValue={min}
-          maximumValue={max}
-          style={{ width: "100%", flex: 1, borderRadius: 10 }}
-          renderThumb={() => null}
-          renderBubble={() => null}
-          disableTapEvent
-          theme={{
-            disableMinTrackTintColor: "#fff",
-            maximumTrackTintColor: "#DADADA",
-            minimumTrackTintColor: "#000",
-            cacheTrackTintColor: "#333",
-            bubbleBackgroundColor: "#666",
-            heartbeatColor: "#999",
+    // <GestureHandlerRootView className="w-full flex-1">
+    <View className="flex w-full flex-col items-start justify-center gap-3">
+      {/* Validate password strength here */}
+      <Text className="text-black">Password strength</Text>
+      <View className="flex w-full items-start justify-center bg-gray-400">
+        <Animated.View
+          style={{
+            height: 3,
+            backgroundColor: "#000",
+            width: `${progress.value}%`,
           }}
         />
-
-        <View className="mt-4 gap-2">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <View
-              key={index}
-              className="flex flex-row items-center justify-start gap-2"
-            >
-              <View
-                className={`h-2 w-2 rounded-full`}
-                style={{
-                  backgroundColor:
-                    index == 0 && password.length >= 8
-                      ? "#18EAFF"
-                      : index == 1 && /\d/.test(password)
-                        ? "#18EAFF"
-                        : index == 2 && /[!@#$%^&*]/.test(password)
-                          ? "#18EAFF"
-                          : "#F80F0F",
-                }}
-              ></View>
-
-              <Text className="font-light">
-                {index === 0
-                  ? "Not shorter than 8 characters"
-                  : index === 1
-                    ? "Should include 1 number"
-                    : "Should include 1 special character"}
-              </Text>
-            </View>
-          ))}
-        </View>
       </View>
-    </GestureHandlerRootView>
+
+      <View className="mt-4 gap-2">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <View
+            key={index}
+            className="flex flex-row items-center justify-start gap-2"
+          >
+            <View
+              className={`h-2 w-2 rounded-full`}
+              style={{
+                backgroundColor:
+                  index == 0 && password.length >= 8
+                    ? "#18EAFF"
+                    : index == 1 && /\d/.test(password)
+                      ? "#18EAFF"
+                      : index == 2 && /[!@#$%^&*]/.test(password)
+                        ? "#18EAFF"
+                        : "#F80F0F",
+              }}
+            ></View>
+
+            <Text className="font-light">
+              {index === 0
+                ? "Not shorter than 8 characters"
+                : index === 1
+                  ? "Should include 1 number"
+                  : "Should include 1 special character"}
+            </Text>
+          </View>
+        ))}
+      </View>
+    </View>
+    // </GestureHandlerRootView>
   );
 }

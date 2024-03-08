@@ -20,6 +20,7 @@ import { useRef, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/generated/api";
 import { Id } from "@/convex/generated/dataModel";
+import { storeData } from "@/storageUtils";
 
 export default function WelcomePage() {
   const params = useLocalSearchParams();
@@ -226,6 +227,8 @@ export default function WelcomePage() {
                                 userId: params?.userId as Id<"user">,
                                 nickname: nickname.trim(),
                               });
+
+                              await storeData("@enet-store/isOnboarded", true);
 
                               router.push({
                                 pathname: "/(main)/dashboard",

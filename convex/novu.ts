@@ -24,3 +24,19 @@ export const triggerOTPWorkflow = internalAction({
     });
   },
 });
+
+export const triggerLeaderboardWorkflow = internalAction({
+  args: { userId: v.string(), email: v.string() },
+  handler: async (_, args) => {
+    // trigger novu otp-activation workflow
+    await novu.trigger("weekly-rank", {
+      to: {
+        subscriberId: args.userId,
+        email: args.email,
+      },
+      payload: {
+        securityEmail: "support@enetminer.com",
+      },
+    });
+  },
+});

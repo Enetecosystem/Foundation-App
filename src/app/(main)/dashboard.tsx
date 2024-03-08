@@ -2,7 +2,11 @@ import DashboardHeader from "@/components/dashboard_header";
 import { Overview } from "@/components/overview_card";
 import { StatsCard } from "@/components/stats_card";
 import TaskBoostCard from "@/components/task_boost_card";
+import { api } from "@/convex/generated/api";
+import { Id } from "@/convex/generated/dataModel";
 import { Octicons } from "@expo/vector-icons";
+import { useAction, useQuery } from "convex/react";
+import { format, formatDuration } from "date-fns";
 import { Image } from "expo-image";
 import { Link, Stack, router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
@@ -27,6 +31,14 @@ export default function DashboardPage() {
   const { height } = useWindowDimensions();
   const [modalVisible, setModalVisible] = useState(false);
   console.log(params, ":::Params");
+
+  // Fetch users data
+  const userDetail = useQuery(api.queries.getUserDetails, {
+    userId: params?.userId as Id<"user">,
+  });
+
+  const triggerMiner = useAction(api.mutations.triggerMining);
+
   return (
     <SafeAreaView className="bg-background">
       <KeyboardAvoidingView behavior={"position"}>
@@ -36,11 +48,33 @@ export default function DashboardPage() {
               style={{ bottom: bottom + 92 }}
               className="absolute left-0 right-0 z-50 flex h-24 w-full flex-col items-center justify-center gap-2 bg-white"
             >
-              <TouchableOpacity className="flex flex-row items-center gap-3 rounded-full border border-gray-600 px-4 py-3 shadow-lg drop-shadow-md">
-                <Text>Start Mining</Text>
-                <Octicons name="database" size={20} color="black" />
-              </TouchableOpacity>
-              <Text>19hrs 23m 12s</Text>
+              {!userDetail?.mineActive && (
+                <TouchableOpacity
+                  onPress={async () => {
+                    await triggerMiner({
+                      userId: userDetail?._id ?? (params?.userId as Id<"user">),
+                    });
+                  }}
+                  className="flex flex-row items-center gap-3 rounded-full border border-gray-600 px-4 py-3 shadow-lg drop-shadow-md"
+                >
+                  <Text>Start Mining</Text>
+                  <Octicons name="database" size={20} color="black" />
+                </TouchableOpacity>
+              )}
+
+              {userDetail?.mineActive && (
+                <TouchableOpacity className="flex flex-row items-center gap-3 rounded-full border border-gray-600 bg-black px-4 py-3 shadow-lg drop-shadow-md">
+                  <Text className="font-medium text-white">
+                    Mining at {userDetail?.miningRate}
+                  </Text>
+                  <Octicons name="database" size={20} color="black" />
+                </TouchableOpacity>
+              )}
+              <Text>
+                {userDetail?.mineStartTime !== 0
+                  ? format(userDetail?.mineStartTime, "HH mm ss")
+                  : ""}
+              </Text>
             </View>
             <ScrollView
               className="z-40 min-h-full w-full bg-[#F5F5F5]"
@@ -66,9 +100,9 @@ export default function DashboardPage() {
                 className="flex h-full w-full flex-col px-[20px] py-4 pb-20"
               >
                 <StatsCard
-                  minedCount={48500.71}
-                  miningRate={25}
-                  xpEarned={2000}
+                  minedCount={userDetail?.minedCount ?? 0}
+                  miningRate={userDetail?.miningRate ?? 0}
+                  xpEarned={userDetail?.xpCount ?? 0}
                 />
 
                 <View className="my-2" />
@@ -76,17 +110,19 @@ export default function DashboardPage() {
                 <View className="mt-4 flex w-full flex-col gap-2">
                   <Text className="text-xl font-medium">Overview</Text>
                   <Overview
-                    totalUsers={4218000}
-                    referrals={12880}
-                    referralLink="https://ref.link"
-                    globalRank={4218}
+                    totalUsers={userDetail?.totalUserCount ?? 0}
+                    referrals={userDetail?.referralCount ?? 0}
+                    referralCode={userDetail?.referralCode ?? "REFCOD"}
+                    globalRank={userDetail?.globalRank ?? 1000}
                   />
                 </View>
 
                 <View className="my-4" />
 
                 <TouchableOpacity
-                  onPress={() => router.push("/(main)/referral")}
+                  onPress={() =>
+                    router.push({ pathname: "/(main)/referral", params })
+                  }
                   className="flex w-full flex-row items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 bg-[#EBEBEB] p-4"
                 >
                   <Image

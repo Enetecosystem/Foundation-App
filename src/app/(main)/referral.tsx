@@ -1,6 +1,6 @@
 import DashboardHeader from "@/components/dashboard_header";
 import Header from "@/components/header";
-import { Stack } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -18,9 +18,27 @@ import {
 } from "react-native-safe-area-context";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
+import { api } from "@/convex/generated/api";
+import { useQuery } from "convex/react";
+import * as Clipboard from "expo-clipboard";
+import { Id } from "@/convex/generated/dataModel";
 
 export default function ReferralPage() {
   const { top } = useSafeAreaInsets();
+  const params = useLocalSearchParams();
+
+  // Fetch users data
+  const userDetail = useQuery(api.queries.getUserDetails, {
+    userId: params?.userId as Id<"user">,
+  });
+
+  const historyDetails = useQuery(api.queries.getOnlyXpHistory, {
+    userId: params?.userId as Id<"user">,
+  });
+
+  const copyToClipboard = async () => {
+    await Clipboard.setStringAsync(userDetail?.referralCode);
+  };
 
   return (
     <SafeAreaView className="bg-background">
@@ -50,7 +68,10 @@ export default function ReferralPage() {
               <View className="my-4" />
               <View className="px-[20px]">
                 <TouchableOpacity
-                  onPress={() => Alert.alert("Link copied to clipboard")}
+                  onPress={() => {
+                    copyToClipboard();
+                    Alert.alert("Link copied to clipboard");
+                  }}
                   className="flex w-36 flex-row items-center justify-center gap-2 rounded-lg bg-black py-2"
                 >
                   <SimpleLineIcons name="share-alt" size={18} color="white" />
@@ -61,22 +82,26 @@ export default function ReferralPage() {
               <View className="flex w-full flex-1 flex-col gap-4 rounded-t-3xl bg-white px-[20px] py-5 pb-24">
                 <View className="flex flex-row items-center justify-between">
                   <Text className="text-lg">Referrals</Text>
-                  <Text className="text-lg font-normal">10,001</Text>
+                  <Text className="text-lg font-normal">
+                    {(userDetail?.referralCount ?? 0).toLocaleString("en-US")}
+                  </Text>
                 </View>
 
                 <FlashList
-                  data={Array.from({ length: 20 })}
+                  data={historyDetails ?? []}
                   renderItem={({ item, index }) => (
                     <View className="my-2 flex flex-row items-center justify-between rounded-lg bg-[#EBEBEB] p-4">
                       <View className="flex flex-row items-center justify-center gap-2">
                         <Text>{index + 1}.</Text>
-                        <Text>Johcee joined via your link</Text>
+                        <Text>{item?.message}</Text>
                       </View>
 
-                      <Text className="font-medium">+{index + 13}Pts</Text>
+                      <Text className="font-medium">+{item?.extra} XP</Text>
                     </View>
                   )}
-                  estimatedItemSize={200}
+                  estimatedItemSize={
+                    historyDetails ? historyDetails.length + 200 : 200
+                  }
                 />
               </View>
             </View>

@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -15,9 +15,17 @@ import {
 import Header from "@/components/header";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/generated/api";
+import { Doc, Id } from "@/convex/generated/dataModel";
 
 export default function HistoryPage() {
+  const params = useLocalSearchParams();
   const { top } = useSafeAreaInsets();
+
+  const getHistory: Doc<"activity">[] = useQuery(api.queries.getHistory, {
+    userId: params?.userId as Id<"user">,
+  });
 
   return (
     <SafeAreaView className="bg-background">
@@ -36,10 +44,10 @@ export default function HistoryPage() {
               <Text className="text-lg font-normal text-black">Today</Text>
               <View className="w-full flex-1 pb-24">
                 <FlashList
-                  data={Array.from({ length: 20 })}
-                  renderItem={({ item, index }) => (
+                  data={getHistory ? getHistory : []}
+                  renderItem={({ item }) => (
                     <View className="my-2 flex w-full flex-row gap-3 rounded-lg bg-white p-3">
-                      {index % 2 <= 0 && (
+                      {item.type === "xp" && (
                         <View className="h-[32px] w-[32px] items-center justify-center rounded-lg bg-[#E2DEF0] p-3">
                           <Image
                             source={require("../../../assets/main/icons/redo.png")}
@@ -47,7 +55,7 @@ export default function HistoryPage() {
                           />
                         </View>
                       )}
-                      {index % 2 >= 1 && (
+                      {item.type === "rank" && (
                         <View className="h-[32px] w-[32px] items-center justify-center rounded-lg bg-[#D5EEF0] p-3">
                           <Image
                             source={require("../../../assets/main/icons/microscope.png")}
@@ -56,31 +64,36 @@ export default function HistoryPage() {
                         </View>
                       )}
 
-                      {index % 2 <= 0 && (
+                      {item.type === "xp" && (
                         <View className="flex flex-1 flex-col items-start justify-start">
                           <Text className="text-start text-lg font-normal">
-                            Johcee joined using your referral link
+                            {item.message}
                           </Text>
-                          <Text className="text-black/60">12:12pm</Text>
+                          <Text className="text-black/60">
+                            {new Date(item._creationTime).toLocaleTimeString()}
+                          </Text>
                         </View>
                       )}
 
-                      {index % 2 >= 1 && (
+                      {item.type === "rank" && (
                         <View className="flex flex-1 flex-col items-start justify-start">
                           <Text className="text-start text-lg font-normal">
-                            You ranked at NO.1 on the local leaderboard this
-                            week
+                            {item.message}
                           </Text>
-                          <Text>12:12pm</Text>
+                          <Text>
+                            {new Date(item._creationTime).toLocaleTimeString()}
+                          </Text>
                         </View>
                       )}
 
-                      {index % 2 <= 0 && (
-                        <Text className="mt-4 text-lg font-medium">123 XP</Text>
+                      {item.type === "xp" && (
+                        <Text className="mt-4 text-lg font-medium">
+                          {item?.extra} XP
+                        </Text>
                       )}
                     </View>
                   )}
-                  estimatedItemSize={200}
+                  estimatedItemSize={getHistory ? getHistory.length + 200 : 200}
                 />
               </View>
             </View>
