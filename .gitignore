@@ -16,3 +16,8 @@ web-build/
 .DS_Store
 
 .env.local
+
+android/
+android
+ios/
+ios

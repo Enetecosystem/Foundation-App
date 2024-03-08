@@ -22,6 +22,7 @@ import {
   View,
   ScrollView,
   useWindowDimensions,
+  Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -51,9 +52,29 @@ export default function DashboardPage() {
               {!userDetail?.mineActive && (
                 <TouchableOpacity
                   onPress={async () => {
-                    await triggerMiner({
-                      userId: userDetail?._id ?? (params?.userId as Id<"user">),
-                    });
+                    Alert.alert(
+                      "Start mining",
+                      "Are you sure you want to start mining?",
+                      [
+                        {
+                          text: "Cancel",
+                          style: "cancel",
+                          onPress: () => { },
+                        },
+                        {
+                          text: "Start",
+                          // style: "destructive",
+                          onPress: async () => {
+                            // TODO: Delete logic
+                            await triggerMiner({
+                              userId: userDetail?._id ?? (params?.userId as Id<"user">),
+                            });
+
+                          },
+                        },
+                      ],
+                    );
+
                   }}
                   className="flex flex-row items-center gap-3 rounded-full border border-gray-600 px-4 py-3 shadow-lg drop-shadow-md"
                 >
@@ -65,15 +86,15 @@ export default function DashboardPage() {
               {userDetail?.mineActive && (
                 <TouchableOpacity className="flex flex-row items-center gap-3 rounded-full border border-gray-600 bg-black px-4 py-3 shadow-lg drop-shadow-md">
                   <Text className="font-medium text-white">
-                    Mining at {userDetail?.miningRate}
+                    Mining at {userDetail?.miningRate} $EN/hr
                   </Text>
-                  <Octicons name="database" size={20} color="black" />
+                  <Octicons name="database" size={20} color="white" />
                 </TouchableOpacity>
               )}
               <Text>
-                {userDetail?.mineStartTime !== 0
-                  ? format(userDetail?.mineStartTime, "HH mm ss")
-                  : ""}
+                {userDetail
+                  && format(userDetail?.mineStartTime ? userDetail.mineStartTime : Date.now(), "HH mm ss")
+                }
               </Text>
             </View>
             <ScrollView
