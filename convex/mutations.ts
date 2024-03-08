@@ -159,6 +159,14 @@ export const mine = internalMutation({
 
         await db.patch(userId, {
           mineActive: false,
+          ...(user?.botBoost.isActive && {
+            botBoost: { ...user.botBoost, isActive: false },
+            mineHours: 6,
+          }),
+          ...(user?.speedBoost.isActive && {
+            speedBoost: { ...user.speedBoost, isActive: false },
+            miningRate: 2.0,
+          }),
           redeemableCount:
             user.miningRate *
             differenceInHours(
@@ -176,6 +184,40 @@ export const mine = internalMutation({
     await db.patch(userId, { mineActive: true, mineStartTime: Date.now() });
     await scheduler.runAfter(1000 * 60 * 60, internal.mutations.mine, {
       userId,
+    });
+  },
+});
+
+// Boost
+
+export const speedBoost = mutation({
+  args: { userId: v.id("user") },
+  handler: async ({ db }, { userId }) => {
+    const user = await db.get(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await db.patch(userId, {
+      speedBoost: { ...user.speedBoost, isActive: true },
+      miningRate: user.miningRate + user.speedBoost.rate,
+    });
+  },
+});
+
+export const botBoost = mutation({
+  args: { userId: v.id("user") },
+  handler: async ({ db }, { userId }) => {
+    const user = await db.get(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await db.patch(userId, {
+      botBoost: { ...user.botBoost, isActive: true },
+      mineHours: user.mineHours + user.botBoost.hours,
     });
   },
 });

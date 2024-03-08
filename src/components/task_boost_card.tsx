@@ -16,6 +16,9 @@ import {
 } from "@expo/vector-icons";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/generated/api";
+import { Id } from "@/convex/generated/dataModel";
 
 interface ITaskBoostCardProps {
   renderTasks: () => React.ReactNode;
@@ -27,6 +30,31 @@ export default function TaskBoostCard() {
   const sliderRef = useRef(null);
   const { width } = useWindowDimensions();
   const [sliderIndex, setSliderIndex] = useState(0);
+
+
+  const speedBoost = useMutation(api.mutations.speedBoost);
+  const botBoost = useMutation(api.mutations.botBoost);
+
+
+  const boosterList = [
+    {
+      name: "Mining Speed",
+      cost: 50,
+      icon: <Feather name="zap" size={24} color="black" />,
+      action: async () => {
+        await speedBoost({ userId: params?.userId as Id<"user"> });
+      },
+    },
+    {
+      name: "Auto Mining Bot",
+      cost: 500,
+      icon: <Octicons name="database" size={24} color="black" />,
+      action: async () => {
+        await botBoost({ userId: params?.userId as Id<"user"> });
+      },
+    },
+  ];
+
 
   return (
     <View className="mb-32 flex w-full flex-col gap-4">
@@ -98,14 +126,14 @@ export default function TaskBoostCard() {
         enabled={false}
         scrollAnimationDuration={700}
         data={Array.from({ length: 2 })}
-        onSnapToItem={(index) => {}}
+        onSnapToItem={(index) => { }}
         defaultIndex={0}
         renderItem={({ index, item }) => {
           if (index === 0) {
             return <Tasks key={index} params={params} />;
           }
 
-          return <Boosts key={index} />;
+          return <Boosts key={index} boosterList={boosterList} />;
         }}
       />
     </View>
@@ -166,21 +194,7 @@ const Tasks = ({ params }) => (
   </View>
 );
 
-const boosterList = [
-  {
-    name: "Mining Speed",
-    cost: 50,
-    icon: <Feather name="zap" size={24} color="black" />,
-    action: () => {},
-  },
-  {
-    name: "Auto Mining Bot",
-    cost: 500,
-    icon: <Octicons name="database" size={24} color="black" />,
-    action: () => {},
-  },
-];
-const Boosts = () => (
+const Boosts = ({ boosterList }) => (
   <View className="flex w-full flex-1 flex-col items-center justify-start gap-4 bg-white p-6 pb-14">
     <View className="flex w-full flex-row items-center justify-between">
       <Text className="px-6 text-xl font-normal text-black">
@@ -194,7 +208,7 @@ const Boosts = () => (
 
     {boosterList.map((boost, index) => (
       <TouchableOpacity
-        onPress={() => {}}
+        onPress={boost.action}
         key={index}
         className="flex w-full flex-row items-center justify-center gap-4"
       >
