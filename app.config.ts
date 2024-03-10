@@ -7,7 +7,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   scheme: "acme",
   userInterfaceStyle: "automatic",
-  orientation: "default",
+  orientation: "portrait",
   splash: {
     image: "./assets/splash.png",
     resizeMode: "contain",

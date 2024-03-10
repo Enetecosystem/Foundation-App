@@ -10,7 +10,8 @@
     "preview": {
       "distribution": "internal",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "image": "latest"
       },
       "env": {
         "CONVEX_DEPLOYMENT": "dev:gallant-mockingbird-105",

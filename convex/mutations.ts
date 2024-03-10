@@ -11,6 +11,16 @@ import { differenceInHours } from "date-fns";
 export const storeEmail = internalMutation({
   args: { email: v.string(), referreeCode: v.optional(v.string()) },
   handler: async (ctx, args) => {
+    // Check if email already exists
+    const existingEmail = await ctx.db
+      .query("user")
+      .filter((q) => q.eq(q.field("email"), args.email))
+      .first();
+
+    if (existingEmail?.email === args.email) {
+      throw new Error("Email already exist");
+    }
+
     // Store email and referral
     const userId = await ctx.db.insert("user", {
       email: args.email,

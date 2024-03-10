@@ -1,8 +1,10 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MMKV } from "react-native-mmkv";
+
+export const storage = new MMKV();
 
 export const storeData = async (key: string, value: any): Promise<void> => {
   try {
-    await AsyncStorage.setItem(key, JSON.stringify(value));
+    storage.set(key, JSON.stringify(value));
   } catch (e: any) {
     console.log(e, ":::Error storing data");
     throw new Error("Error saving data to local storage");
@@ -14,7 +16,7 @@ export const getData = async (
   isObject?: boolean,
 ): Promise<Record<string, any> | string | null> => {
   try {
-    const value = await AsyncStorage.getItem(key);
+    const value = storage.getString(key);
     return isObject ? JSON.parse(value) : value;
   } catch (e: any) {
     console.log(e, ":::Error reading data");
@@ -24,7 +26,7 @@ export const getData = async (
 
 export const removeData = async (key: string): Promise<void> => {
   try {
-    await AsyncStorage.removeItem(key);
+    storage.delete(key);
   } catch (e: any) {
     console.log(e.message ?? e.tostring(), ":::Error removing item");
     throw new Error(e.message ?? e.tostring());

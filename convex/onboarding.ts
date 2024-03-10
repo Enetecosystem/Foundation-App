@@ -129,7 +129,7 @@ export const storeNickname = mutation({
       const referree = await ctx.db
         .query("user")
         .filter((q) => q.eq(q.field("referralCode"), user?.referreeCode))
-        .unique();
+        .first();
 
       if (referree) {
         // Patch referree count
@@ -145,7 +145,8 @@ export const storeNickname = mutation({
         });
       }
     } catch (e: any) {
-      throw new Error("Could not store nickname");
+      console.log(e.message ?? e.toString());
+      throw new Error(e.message ?? e.toString());
     }
   },
 });

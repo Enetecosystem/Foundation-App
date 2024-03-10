@@ -21,7 +21,7 @@ import {
 import { useMutation } from "convex/react";
 import { api } from "@/convex/generated/api";
 import { Id } from "@/convex/generated/dataModel";
-import { removeData } from "@/storageUtils";
+import { removeData, storage } from "@/storageUtils";
 
 export default function DashboardHeader({
   top,
@@ -157,6 +157,7 @@ export default function DashboardHeader({
                             await deleteAccount({
                               userId: params?.userId as Id<"user">,
                             });
+                            storage.clearAll();
                             router.replace("/(onboarding)/");
                           },
                         },

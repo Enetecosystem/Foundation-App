@@ -31,7 +31,6 @@ export default function Register() {
     async function getUserLocalData() {
       try {
         const isOnboarded = await getData("@enet-store/isOnboarded");
-        console.log(isOnboarded, ":::isOnboarded");
         if (!isOnboarded) {
           setUserIsOnbaorded(false);
           return;
@@ -115,6 +114,13 @@ export default function Register() {
                         pathname: "/(main)/dashboard",
                         params: { email, userId, nickname: user?.nickname },
                       });
+                    }
+
+                    if (!email.length) {
+                      return Alert.alert(
+                        "Onbaording error",
+                        "Valid email must be entered",
+                      );
                     }
 
                     // TODO: call server convex function to store users email and referral then send OTP to email address
