@@ -1,5 +1,5 @@
 // TODO: Create convex action to store user data, create OTP and send email with novu
-import { action, mutation } from "./_generated/server";
+import { action, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import { customAlphabet } from "nanoid";
@@ -148,6 +148,23 @@ export const storeNickname = mutation({
       console.log(e.message ?? e.toString());
       throw new Error(e.message ?? e.toString());
     }
+  },
+});
+
+export const isNicknameValid = query({
+  args: { nickname: v.string() },
+  handler: async (ctx, { nickname }) => {
+    // Check if the email already exists in the user table
+
+    const users = await ctx.db.query("user").collect();
+
+    if (!users || !users.length) return true;
+
+    const isNotValid: boolean = users.some(
+      (user) => user?.nickname === nickname,
+    );
+
+    return !isNotValid;
   },
 });
 
