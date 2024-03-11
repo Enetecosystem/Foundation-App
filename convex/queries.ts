@@ -68,11 +68,13 @@ export const getUserWithEmail = internalQuery({
 export const getLeaderBoard = query({
   args: { userId: v.id("user") },
   handler: async ({ db }, { userId }) => {
-    const users = await db
+    const rankedUsers = await db
       .query("user")
       .withIndex("by_xpCount")
       .order("desc")
       .take(25);
+
+    const users = await db.query("user").collect();
 
     const user = await db.get(userId);
 
@@ -80,17 +82,16 @@ export const getLeaderBoard = query({
       throw new Error("No user with that id");
     }
 
-    const sortedUsers = users.slice().sort((a, b) => b.xpCount - a.xpCount);
-    const globalRank = calculateRank(
-      (await db.query("user").collect()) ?? [],
-      user?._id,
-    );
+    const sortedUsers = rankedUsers
+      .slice()
+      .sort((a, b) => b.xpCount - a.xpCount);
+    const globalRank = calculateRank(users ?? [], user?._id);
 
     return {
       user,
       sortedUsers,
       globalRank,
-      totalUsers: (await db.query("user").collect()).length,
+      totalUsers: users.length,
     };
   },
 });

@@ -31,7 +31,7 @@ export default function LeaderboardPage() {
     userId: params?.userId as Id<"user">,
   });
 
-  console.log(params, ":::Params for the leaderboard");
+  console.log(params, ":::Params for the leaderboard q.lifeee@gmail.com");
 
   return (
     <SafeAreaView className="bg-background">
@@ -51,19 +51,24 @@ export default function LeaderboardPage() {
                 />
               </View>
 
-              <View className="flex flex-col">
+              <View className="flex flex-col gap-4">
                 <View className="flex flex-row items-center justify-between gap-8">
                   <Text className="text-white">Referrals</Text>
                   <Text className="text-white">
-                    {(data ? data?.user.referralCount : 0).toLocaleString(
-                      "en-US",
-                    )}
+                    {data &&
+                      (data.user
+                        ? data?.user?.referralCount
+                        : 0
+                      ).toLocaleString("en-US")}
                   </Text>
                 </View>
                 <View className="flex flex-row items-center justify-between gap-8">
                   <Text className="text-white">XP</Text>
                   <Text className="text-white">
-                    {(data ? data?.user.xpCount : 0).toLocaleString("en-US")}
+                    {data &&
+                      (data.user ? data?.user?.xpCount : 0).toLocaleString(
+                        "en-US",
+                      )}
                   </Text>
                 </View>
               </View>
@@ -72,7 +77,7 @@ export default function LeaderboardPage() {
                 <Text className="text-white">Position | Members</Text>
                 <View className="flex flex-row items-center justify-between gap-8 rounded-md bg-white px-6 py-2">
                   <Text className="font-medium text-black">
-                    {(data ? data.globalRank : 0).toLocaleString("en-US")}
+                    {(data ? data?.globalRank : 0).toLocaleString("en-US")}
                   </Text>
                   <Text>|</Text>
                   <Text className="font-medium text-black">
@@ -246,7 +251,9 @@ export default function LeaderboardPage() {
                               />
                             </View>
                             <View className="flex flex-col items-start justify-center gap-2">
-                              <Text>{item?.nickname}</Text>
+                              <Text>
+                                {item ? item?.nickname : "Loading..."}
+                              </Text>
                               <View className="h-6 w-6 items-center justify-center rounded-lg bg-[#EBEBEB]">
                                 <Text>{index + 4}</Text>
                               </View>
@@ -255,10 +262,15 @@ export default function LeaderboardPage() {
 
                           <View className="flex flex-col items-end justify-center gap-2">
                             <Text className="font-normal text-black">
-                              {item.referralCount.toLocaleString("en-US")}
+                              {(item ? item.referralCount : 0).toLocaleString(
+                                "en-US",
+                              )}
                             </Text>
                             <Text className="font-normal text-black/60">
-                              {item.xpCount.toLocaleString("en-US")} XP
+                              {(item ? item.xpCount : 0).toLocaleString(
+                                "en-US",
+                              )}{" "}
+                              XP
                             </Text>
                           </View>
                         </View>
