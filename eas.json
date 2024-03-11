@@ -14,8 +14,6 @@
         "image": "latest"
       },
       "env": {
-        "CONVEX_DEPLOYMENT": "dev:gallant-mockingbird-105",
-        "CONVEX_URL": "https://gallant-mockingbird-105.convex.cloud",
         "BUNDLE_ID": "com.enetminer.enet",
         "APP_ENV": "staging"
       }

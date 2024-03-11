@@ -11,14 +11,15 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-eas.json
 .env*
 .env.*
+.env*.local
 
 # macOS
 .DS_Store
 
 .env.local
+.env.staging
 
 android/
 android
