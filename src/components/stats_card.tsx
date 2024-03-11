@@ -7,11 +7,13 @@ interface IStatsCardProps {
   minedCount: number;
   miningRate: number;
   xpEarned: number;
+  redeemableCount: number;
 }
 export const StatsCard: FC<IStatsCardProps> = ({
   minedCount,
   miningRate,
   xpEarned,
+  redeemableCount,
 }) => {
   return (
     <ImageBackground
@@ -38,7 +40,7 @@ export const StatsCard: FC<IStatsCardProps> = ({
               $EN {minedCount}
             </Text>
             <Text className="text-sm font-normal text-[#989898]">
-              {miningRate}
+              {redeemableCount}
             </Text>
           </View>
           <View className="flex flex-col items-start justify-center gap-2">
