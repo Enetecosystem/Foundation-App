@@ -5,7 +5,11 @@
   "scripts": {
     "start": "EXPO_NO_DOTENV=1 bunx expo start -c",
     "start:local": "APP_ENV=local bun run start",
-    "build:eas": "eas build --platform android --profile preview",
+    "build:eas-android": "eas build --platform android --profile preview",
+    "convex:dev": "bunx convex dev",
+    "convex:dashboard": "bunx convex dashboard",
+    "convex:docs": "bunx convex docs",
+    "convex:run": "bunx convex run --",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web"
@@ -22,6 +26,7 @@
     "expo": "^50.0.11",
     "expo-clipboard": "~5.0.1",
     "expo-constants": "~15.4.5",
+    "expo-dev-client": "~3.3.9",
     "expo-image": "~1.10.6",
     "expo-linking": "~6.2.1",
     "expo-router": "~3.4.1",
