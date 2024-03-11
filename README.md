@@ -1,6 +1,6 @@
-# Expo Router and Tailwind CSS
+# Enet Miner mobile app
 
-Use [Expo Router](https://docs.expo.dev/router/introduction/) with [Nativewind](https://www.nativewind.dev/v4/overview/) styling.
+Used [Expo Router](https://docs.expo.dev/router/introduction/) with [Nativewind](https://www.nativewind.dev/v4/overview/) styling.
 
 ## 🚀 How to use
 
