@@ -16,6 +16,7 @@ import { useAction } from "convex/react";
 import { api } from "@/convex/generated/api";
 import { useEffect, useState } from "react";
 import { getData, storeData } from "@/storageUtils";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -87,67 +88,81 @@ export default function Register() {
             </View>
 
             <View className="flex h-auto w-full flex-col items-center justify-center px-[20px]">
-              <Link
-                suppressHighlighting
-                href="/otp"
-                className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
-                onPress={async (e) => {
-                  try {
-                    e.preventDefault();
-                    // return router.push("/(main)/history");
-                    //
+              <View className="flex flex-row gap-3 w-full items-center justify-center">
+                <Link
+                  suppressHighlighting
+                  href="/otp"
+                  className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
+                  onPress={async (e) => {
+                    try {
+                      e.preventDefault();
+                      // return router.push("/(main)/history");
+                      //
 
-                    // TODO: If user is onboarded already, then login
-                    if (userIsOnboarded) {
-                      if (!email.length || !password.length) {
+                      // TODO: If user is onboarded already, then login
+                      if (userIsOnboarded) {
+                        if (!email.length || !password.length) {
+                          return Alert.alert(
+                            "Onbaording error",
+                            "Valid email or password must be entered",
+                          );
+                        }
+
+                        const user = await loginUser({ email, password });
+                        const userId = user?._id;
+                        // Store data to local storage
+                        await storeData("@enet-store/user", { email, userId });
+                        return router.push({
+                          pathname: "/(main)/dashboard",
+                          params: { email, userId, nickname: user?.nickname },
+                        });
+                      }
+
+                      if (!email.length) {
                         return Alert.alert(
                           "Onbaording error",
-                          "Valid email or password must be entered",
+                          "Valid email must be entered",
                         );
                       }
 
-                      const user = await loginUser({ email, password });
-                      const userId = user?._id;
+                      // TODO: call server convex function to store users email and referral then send OTP to email address
+                      const userId = await initiateUser({
+                        referreeCode: !!referreeCode.length
+                          ? referreeCode.trim()
+                          : undefined,
+                        email: email.trim(),
+                      });
+
+                      console.log(userId, ":::Result of stored user");
+
                       // Store data to local storage
                       await storeData("@enet-store/user", { email, userId });
-                      return router.push({
-                        pathname: "/(main)/dashboard",
-                        params: { email, userId, nickname: user?.nickname },
+
+                      router.push({
+                        pathname: "/(onboarding)/otp",
+                        params: { email, userId },
                       });
+                    } catch (e: any) {
+                      Alert.alert("Onboarding error", e.message ?? e.toString());
                     }
+                  }}
+                >
+                  {userIsOnboarded ? "Login" : "Signup"}
+                  {/* <Text className=""></Text> */}
+                </Link>
+                <Link
+                  suppressHighlighting
+                  href="/#"
+                  className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
+                  onPress={(e) => {
+                    e.preventDefault();
 
-                    if (!email.length) {
-                      return Alert.alert(
-                        "Onbaording error",
-                        "Valid email must be entered",
-                      );
-                    }
-
-                    // TODO: call server convex function to store users email and referral then send OTP to email address
-                    const userId = await initiateUser({
-                      referreeCode: !!referreeCode.length
-                        ? referreeCode.trim()
-                        : undefined,
-                      email: email.trim(),
-                    });
-
-                    console.log(userId, ":::Result of stored user");
-
-                    // Store data to local storage
-                    await storeData("@enet-store/user", { email, userId });
-
-                    router.push({
-                      pathname: "/(onboarding)/otp",
-                      params: { email, userId },
-                    });
-                  } catch (e: any) {
-                    Alert.alert("Onboarding error", e.message ?? e.toString());
-                  }
-                }}
-              >
-                {userIsOnboarded ? "Login" : "Signup"}
-                {/* <Text className=""></Text> */}
-              </Link>
+                    console.log("Twitter button");
+                  }}
+                >
+                  <FontAwesome6 name="x-twitter" size={20} color="white" />
+                </Link>
+              </View>
 
               <Text className="mt-4 text-center leading-6 text-black sm:max-w-xl">
                 By continuing, you agree to our{" "}
