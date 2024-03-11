@@ -59,7 +59,7 @@ export default function DashboardPage() {
                         {
                           text: "Cancel",
                           style: "cancel",
-                          onPress: () => { },
+                          onPress: () => {},
                         },
                         {
                           text: "Start",
@@ -67,14 +67,14 @@ export default function DashboardPage() {
                           onPress: async () => {
                             // TODO: Delete logic
                             await triggerMiner({
-                              userId: userDetail?._id ?? (params?.userId as Id<"user">),
+                              userId:
+                                userDetail?._id ??
+                                (params?.userId as Id<"user">),
                             });
-
                           },
                         },
                       ],
                     );
-
                   }}
                   className="flex flex-row items-center gap-3 rounded-full border border-gray-600 px-4 py-3 shadow-lg drop-shadow-md"
                 >
@@ -92,9 +92,13 @@ export default function DashboardPage() {
                 </TouchableOpacity>
               )}
               <Text>
-                {userDetail
-                  && format(userDetail?.mineStartTime ? userDetail.mineStartTime : Date.now(), "HH mm ss")
-                }
+                {userDetail &&
+                  format(
+                    userDetail?.mineStartTime
+                      ? userDetail.mineStartTime
+                      : Date.now(),
+                    "HH mm ss",
+                  )}
               </Text>
             </View>
             <ScrollView
@@ -124,6 +128,7 @@ export default function DashboardPage() {
                   minedCount={userDetail?.minedCount ?? 0}
                   miningRate={userDetail?.miningRate ?? 0}
                   xpEarned={userDetail?.xpCount ?? 0}
+                  redeemableCount={userDetail?.redeemableCount ?? 0}
                 />
 
                 <View className="my-2" />

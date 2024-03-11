@@ -31,6 +31,8 @@ export default function LeaderboardPage() {
     userId: params?.userId as Id<"user">,
   });
 
+  console.log(params, ":::Params for the leaderboard");
+
   return (
     <SafeAreaView className="bg-background">
       <KeyboardAvoidingView
@@ -107,7 +109,10 @@ export default function LeaderboardPage() {
                       (user, index) => {
                         if (index === 0)
                           return (
-                            <View className="flex flex-row items-center justify-between gap-2">
+                            <View
+                              key={index}
+                              className="flex flex-row items-center justify-between gap-2"
+                            >
                               <View className="flex h-20 w-3/4 flex-row items-center justify-between rounded-r-[30px] bg-[#15BDCF] p-2">
                                 <View className="flex flex-row items-center justify-center gap-2">
                                   <Text className="text-xl font-medium text-white">
@@ -143,7 +148,10 @@ export default function LeaderboardPage() {
 
                         if (index === 1)
                           return (
-                            <View className="flex flex-row items-center justify-between gap-2">
+                            <View
+                              key={index}
+                              className="flex flex-row items-center justify-between gap-2"
+                            >
                               <View className="flex h-20 w-3/5 flex-row items-center justify-between rounded-r-[30px] bg-[#5F37E6] p-2">
                                 <View className="flex flex-row items-center justify-center gap-2">
                                   <Text className="text-xl font-medium text-white">
@@ -178,7 +186,10 @@ export default function LeaderboardPage() {
                           );
 
                         return (
-                          <View className="flex flex-row items-center justify-between gap-2">
+                          <View
+                            key={index}
+                            className="flex flex-row items-center justify-between gap-2"
+                          >
                             <View className="flex h-20 w-3/6 flex-row items-center justify-between rounded-r-[30px] bg-[#000000] p-2">
                               <View className="flex flex-row items-center justify-center gap-2">
                                 <Text className="text-xl font-medium text-white">
