@@ -48,10 +48,10 @@ export default function Register() {
       <KeyboardAvoidingView behavior={"position"}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView className="min-h-screen w-full bg-white">
-            <View className="flex h-auto w-full flex-col items-center justify-center rounded-b-[35px] bg-[#EBEBEB] py-10">
+            <View className="flex h-auto w-full flex-col items-center justify-center rounded-b-[35px] bg-[#EBEBEB] py-8">
               <Image
                 source={require("../../../assets/miner_onboard_img-1.png")}
-                style={{ width: 200, height: 200, alignItems: "center" }}
+                style={{ width: 170, height: 170, alignItems: "center" }}
               />
               <Text className="text-2xl font-medium tracking-normal">
                 Welcome to Enetwallet
@@ -85,14 +85,44 @@ export default function Register() {
                   onChangeText={(text) => setPassword(text)}
                 />
               )}
+              <View className="w-full items-end justify-center">
+                {!userIsOnboarded && (
+                  <Link
+                    className="text-blue-500"
+                    href="/#"
+                    onPress={async (e) => {
+                      e.preventDefault();
+                      await storeData("@enet-store/isOnboarded", true);
+
+                      setUserIsOnbaorded(true);
+                    }}
+                  >
+                    Login
+                  </Link>
+                )}
+                {userIsOnboarded && (
+                  <Link
+                    className="font-medium text-blue-500"
+                    href="/#"
+                    onPress={async (e) => {
+                      e.preventDefault();
+                      await storeData("@enet-store/isOnboarded", false);
+
+                      setUserIsOnbaorded(false);
+                    }}
+                  >
+                    Signup
+                  </Link>
+                )}
+              </View>
             </View>
 
             <View className="flex h-auto w-full flex-col items-center justify-center px-[20px]">
-              <View className="flex flex-row gap-3 w-full items-center justify-center">
+              <View className="flex w-full flex-row items-center justify-center gap-3">
                 <Link
                   suppressHighlighting
                   href="/otp"
-                  className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
+                  className="flex flex-1 items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
                   onPress={async (e) => {
                     try {
                       e.preventDefault();
@@ -143,7 +173,10 @@ export default function Register() {
                         params: { email, userId },
                       });
                     } catch (e: any) {
-                      Alert.alert("Onboarding error", e.message ?? e.toString());
+                      Alert.alert(
+                        "Onboarding error",
+                        e.message ?? e.toString(),
+                      );
                     }
                   }}
                 >
@@ -153,7 +186,7 @@ export default function Register() {
                 <Link
                   suppressHighlighting
                   href="/#"
-                  className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
+                  className="flex max-w-16 flex-1 items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
                   onPress={(e) => {
                     e.preventDefault();
 
