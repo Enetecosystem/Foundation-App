@@ -1,6 +1,6 @@
-import { ImageBackground } from "expo-image";
+import { Image, ImageBackground } from "expo-image";
 import { FC } from "react";
-import { Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
 
 interface IStatsCardProps {
@@ -31,28 +31,35 @@ export const StatsCard: FC<IStatsCardProps> = ({
     >
       {/* States design */}
       <View className="flex h-full w-full flex-col items-start justify-end p-4">
-        <View className="flex flex-row items-start justify-center gap-10">
+        <View className="flex flex-row items-end justify-center gap-2">
+          <TouchableOpacity onPress={() => {}} className="flex w-12 h-20  justify-end items-end">
+            <Image source={require("../../assets/main/miner-fluid-low.png")} style={{width: 40, height: 48, marginBottom: 10}} contentFit="contain" />  
+          </TouchableOpacity>
           <View className="flex flex-col items-start justify-center gap-2">
-            <Text className="text-lg font-normal text-[#989898]">
+            <Text className="text-lg font-light text-[#989898]">
               $EN Mined
             </Text>
-            <Text className="text-xl font-medium text-black">
+            <Text className="text-2xl font-medium text-black">
               $EN {minedCount}
             </Text>
-            <Text className="text-sm font-normal text-[#989898]">
+            <Text className="text-lg font-normal text-[#989898]">
               {redeemableCount}
             </Text>
           </View>
+          <View className="mx-10" />
           <View className="flex flex-col items-start justify-center gap-2">
-            <Text className="text-lg font-normal text-[#989898]">
+            <Text className="text-lg font-light text-[#989898]">
               XP Earned
             </Text>
-            <Text className="text-xl font-medium text-black">{xpEarned}</Text>
+            <Text className="text-2xl font-medium text-black">{xpEarned}</Text>
+            <Text className="text-lg font-normal text-[#989898]">
+              
+            </Text>
           </View>
         </View>
 
-        <View className="my-5" />
-        <View className="rounded-lg bg-black p-2">
+        <View className="my-3" />
+        <View className="rounded-lg bg-black px-4 py-2">
           <Text className="text-start font-normal text-white">
             Mining rate: {miningRate}EN/hr
           </Text>
