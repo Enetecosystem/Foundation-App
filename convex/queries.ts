@@ -85,6 +85,7 @@ export const getLeaderBoard = query({
     const sortedUsers = rankedUsers
       .slice()
       .sort((a, b) => b.xpCount - a.xpCount);
+
     const globalRank = calculateRank(users ?? [], user?._id);
 
     return {
@@ -122,13 +123,13 @@ export const getOnlyXpHistory = query({
   args: { userId: v.id("user") },
   handler: async ({ db }, { userId }) => {
     return (
-      db
+      (await db
         .query("activity")
         .filter((q) =>
           q.and(q.eq(q.field("userId"), userId), q.eq(q.field("type"), "xp")),
         )
         .order("desc")
-        .take(25) ?? []
+        .take(25)) ?? []
     );
   },
 });

@@ -17,10 +17,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/generated/api";
 import { Id } from "@/convex/generated/dataModel";
 import { storeData } from "@/storageUtils";
+import { isNicknameValid } from "convex/onboarding";
 
 export default function WelcomePage() {
   const params = useLocalSearchParams();
@@ -28,8 +29,10 @@ export default function WelcomePage() {
   const carouselRef = useRef(null);
 
   const [nickname, setNickname] = useState("");
+  const [isValid, setIsValid] = useState(false);
 
   const storeNickname = useMutation(api.onboarding.storeNickname);
+  const isNicknameValid = useMutation(api.onboarding.isNicknameValid);
 
   return (
     <SafeAreaView className="bg-background">
@@ -49,7 +52,7 @@ export default function WelcomePage() {
                 data={[...new Array(4).keys()]}
                 scrollAnimationDuration={700}
                 style={{ alignItems: "center", justifyContent: "center" }}
-                onSnapToItem={(index) => {}}
+                onSnapToItem={(index) => { }}
                 defaultIndex={0}
                 renderItem={({ index, item }) => (
                   <View
@@ -192,6 +195,12 @@ export default function WelcomePage() {
                         <View className="w-full gap-2">
                           <Input
                             value={nickname}
+                            onBlur={async () => {
+                              const isValid = await isNicknameValid({ nickname });
+
+                              setIsValid(isValid);
+
+                            }}
                             onChangeText={setNickname}
                             placeholder="Nickname"
                             className="mb-1 w-full rounded-xl border bg-slate-100 px-6 py-4 placeholder:font-light placeholder:text-black focus:border-black"
@@ -221,6 +230,12 @@ export default function WelcomePage() {
                                   "Onboarding error",
                                   "Nickname must be added",
                                 );
+                              }
+
+
+                              if (!isValid) {
+
+                                return Alert.alert("Onboard error", "Nickname must be valid or is already taken");
                               }
 
                               await storeNickname({

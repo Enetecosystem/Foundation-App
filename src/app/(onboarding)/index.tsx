@@ -31,12 +31,15 @@ export default function Register() {
     getUserLocalData();
     async function getUserLocalData() {
       try {
-        const isOnboarded = await getData("@enet-store/isOnboarded");
+        const isOnboarded = await getData("@enet-store/isOnboarded", true);
         if (!isOnboarded) {
           setUserIsOnbaorded(false);
+          console.log(isOnboarded, "Is false");
           return;
+        } else {
+          setUserIsOnbaorded(true);
+          console.log(isOnboarded, "Is true");
         }
-        setUserIsOnbaorded(true);
       } catch (e: any) {
         return Alert.alert(e.message ?? e.toString());
       }
@@ -122,7 +125,7 @@ export default function Register() {
                 <Link
                   suppressHighlighting
                   href="/otp"
-                  className="flex flex-1 items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
+                  className="flex items-center flex-1 justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
                   onPress={async (e) => {
                     try {
                       e.preventDefault();
@@ -167,6 +170,7 @@ export default function Register() {
 
                       // Store data to local storage
                       await storeData("@enet-store/user", { email, userId });
+                      await storeData("@enet-store/isOnboarded", true);
 
                       router.push({
                         pathname: "/(onboarding)/otp",
@@ -175,7 +179,7 @@ export default function Register() {
                     } catch (e: any) {
                       Alert.alert(
                         "Onboarding error",
-                        e.message ?? e.toString(),
+                        e.message,
                       );
                     }
                   }}
@@ -186,7 +190,7 @@ export default function Register() {
                 <Link
                   suppressHighlighting
                   href="/#"
-                  className="flex max-w-16 flex-1 items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
+                  className="flex max-w-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
                   onPress={(e) => {
                     e.preventDefault();
 

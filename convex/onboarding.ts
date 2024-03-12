@@ -151,7 +151,7 @@ export const storeNickname = mutation({
   },
 });
 
-export const isNicknameValid = query({
+export const isNicknameValid = mutation({
   args: { nickname: v.string() },
   handler: async (ctx, { nickname }) => {
     // Check if the email already exists in the user table

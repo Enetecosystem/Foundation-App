@@ -13,11 +13,11 @@ export const storeData = async (key: string, value: any): Promise<void> => {
 
 export const getData = async (
   key: string,
-  isObject?: boolean,
+  shouldParse?: boolean,
 ): Promise<Record<string, any> | string | null> => {
   try {
     const value = storage.getString(key);
-    return isObject ? JSON.parse(value) : value;
+    return shouldParse ? JSON.parse(value) : value;
   } catch (e: any) {
     console.log(e, ":::Error reading data");
     throw new Error(e.message ?? e.toString());
