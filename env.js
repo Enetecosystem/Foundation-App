@@ -5,7 +5,7 @@ const path = require("path");
 const APP_ENV = process.env.APP_ENV ?? "development";
 const envPath = path.resolve(__dirname, `.env.${APP_ENV}`);
 
-if (APP_ENV !== "staging") {
+if (APP_ENV !== "staging" && APP_ENV !== "expo") {
   require("dotenv").config({
     path: envPath,
   });
@@ -13,7 +13,7 @@ if (APP_ENV !== "staging") {
 
 // creating the schema
 const client = z.object({
-  APP_ENV: z.enum(["local", "staging", "production"]),
+  APP_ENV: z.enum(["local", "staging", "production", "expo"]),
   CONVEX_URL: z.string().url(),
   CONVEX_DEPLOYMENT: z.string(),
 });
