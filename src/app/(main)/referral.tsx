@@ -54,12 +54,12 @@ export default function ReferralPage() {
               }}
             />
 
-            <View className="flex w-full flex-col py-4">
+            <View className="flex w-full h-full flex-1 flex-col py-4">
               <View className="flex w-full flex-col px-[20px]">
-                <Text className="text-2xl font-normal">
+                <Text className="text-3xl font-medium">
                   Refer your friends and share up to 1000XPs on each referrals
                 </Text>
-                <Text className="text-lg font-light">
+                <Text className="text-xl font-normal">
                   Your friends get 500 Xp when they signup with your referral
                   code
                 </Text>

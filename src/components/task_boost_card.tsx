@@ -63,7 +63,7 @@ export default function TaskBoostCard() {
           style={{
             backgroundColor: sliderIndex === 0 ? "black" : "transparent",
           }}
-          className="flex w-1/2 flex-row items-center justify-center gap-2 rounded-xl p-4 transition-colors"
+          className="flex w-1/3 flex-row items-center justify-center gap-2 rounded-xl p-4 transition-colors"
           onPress={() => {
             sliderRef.current.scrollTo({ index: 0, animated: true });
             setSliderIndex(0);
@@ -87,14 +87,14 @@ export default function TaskBoostCard() {
           style={{
             backgroundColor: sliderIndex === 1 ? "black" : "transparent",
           }}
-          className="flex w-1/2 flex-row items-center justify-center gap-2 rounded-xl p-4 transition-colors"
+          className="flex w-1/3 flex-row items-center justify-center gap-2 rounded-xl p-4 transition-colors"
           onPress={() => {
             sliderRef.current.scrollTo({ index: 1, animated: true });
             setSliderIndex(1);
           }}
         >
-          <Feather
-            name="zap"
+          <MaterialIcons
+            name="double-arrow"
             size={20}
             color={sliderIndex === 1 ? "white" : "black"}
           />
@@ -102,6 +102,30 @@ export default function TaskBoostCard() {
             className="transition-colors"
             style={{
               color: sliderIndex === 1 ? "white" : "black",
+            }}
+          >
+            Events
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: sliderIndex === 2 ? "black" : "transparent",
+          }}
+          className="flex w-1/3 flex-row items-center justify-center gap-2 rounded-xl p-4 transition-colors"
+          onPress={() => {
+            sliderRef.current.scrollTo({ index: 2, animated: true });
+            setSliderIndex(2);
+          }}
+        >
+          <Feather
+            name="zap"
+            size={20}
+            color={sliderIndex === 2 ? "white" : "black"}
+          />
+          <Text
+            className="transition-colors"
+            style={{
+              color: sliderIndex === 2 ? "white" : "black",
             }}
           >
             Boosts
@@ -125,7 +149,7 @@ export default function TaskBoostCard() {
         pagingEnabled
         enabled={false}
         scrollAnimationDuration={700}
-        data={Array.from({ length: 2 })}
+        data={Array.from({ length: 3 })}
         onSnapToItem={(index) => { }}
         defaultIndex={0}
         renderItem={({ index, item }) => {
@@ -133,7 +157,11 @@ export default function TaskBoostCard() {
             return <Tasks key={index} params={params} />;
           }
 
-          return <Boosts key={index} boosterList={boosterList} />;
+          if(index === 1) {
+            return <Events key={index} params={params} />
+          }
+
+          return <Boosts key={index} boosterList={[]} />;
         }}
       />
     </View>
@@ -194,7 +222,65 @@ const Tasks = ({ params }) => (
   </View>
 );
 
-const Boosts = ({ boosterList }) => (
+const eventsList = [
+  {
+    name: "Invite 10 Friends",
+    reward: 10000,
+    icon: <FontAwesome5 name="user-friends" size={24} color="black" />,
+    link: "/(main)/referral",
+  },
+  {
+    name: "Follow On X(Twitter)",
+    reward: 2000,
+    icon: <FontAwesome6 name="x-twitter" size={24} color="black" />,
+    link: "https://twitter.com/Enetecosystem",
+  },
+  {
+    name: "Join Telegram Channel",
+    reward: 2000,
+    icon: <FontAwesome5 name="telegram-plane" size={24} color="black" />,
+    link: "https://t.me/enetecosystem",
+  },
+  {
+    name: "Join Telegram",
+    reward: 2000,
+    icon: <FontAwesome5 name="telegram-plane" size={24} color="black" />,
+    link: "https://t.me/enetworkchannel",
+  },
+  {
+    name: "Join Discord",
+    reward: 2000,
+    icon: <MaterialIcons name="discord" size={24} color="black" />,
+    link: "https://discord.gg/RQqVWPxuwq",
+  },
+];
+const Events = ({ params }) => (
+  <View className="flex w-full flex-1 flex-col items-center justify-start gap-4 bg-white p-6 pb-14">
+{/*    <Text className="text-2xl text-black">Ecosystem</Text>
+    <Text className="-mt-3 text-lg text-black/50">10,000 XP Challenge</Text> */}
+    {!![].length && eventsList.map((task, index) => (
+      <TouchableOpacity
+        onPress={() => router.push({ pathname: task.link, params })}
+        key={index}
+        className="flex w-full flex-row items-center justify-center gap-4"
+      >
+        <View className="rounded-xl bg-[#EBEBEB] p-5">{task?.icon}</View>
+        <View className="flex flex-col items-start justify-center gap-2">
+          <Text className="text-lg">{task?.name}</Text>
+          <Text>+{task?.reward.toLocaleString("en-US")} XP</Text>
+        </View>
+        <View className="flex-1" />
+        <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+      </TouchableOpacity>
+    ))}
+
+    {![].length && <Text className="text-black mt-5 font-medium text-center text-xl">There are no events at this time, check back later</Text>}
+  </View>
+);
+
+
+
+const Boosts = ({ boosterList }: { boosterList: Array<any>}) => (
   <View className="flex w-full flex-1 flex-col items-center justify-start gap-4 bg-white p-6 pb-14">
     <View className="flex w-full flex-row items-center justify-between">
       <Text className="px-6 text-xl font-normal text-black">
@@ -206,7 +292,7 @@ const Boosts = ({ boosterList }) => (
       </View>
     </View>
 
-    {boosterList.map((boost, index) => (
+    {!!boosterList.length && boosterList.map((boost, index) => (
       <TouchableOpacity
         onPress={boost.action}
         key={index}
@@ -238,5 +324,6 @@ const Boosts = ({ boosterList }) => (
         </View>
       </TouchableOpacity>
     ))}
+    {!boosterList.length && <Text className="text-black text-center font-medium text-lg">Boosts are coming soon!</Text>}
   </View>
 );

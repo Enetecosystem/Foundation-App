@@ -95,6 +95,7 @@ export const storePassword = action({
 export const loginUser = action({
   args: { email: v.string(), password: v.string() },
   handler: async ({ runQuery }, { email, password }) => {
+    // console.log(email, "::::Loging email");
     try {
       const user: any = await runQuery(internal.queries.getUserWithEmail, {
         email,

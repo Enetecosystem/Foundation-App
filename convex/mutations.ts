@@ -195,6 +195,26 @@ export const mine = internalMutation({
   },
 });
 
+
+
+// claim redeemable amount: reset and increment minedCount
+
+export const claimRewards = mutation({
+  args: { userId: v.id("user")},
+  handler: async ({db}, { userId }) => {
+    const user = await db.get(userId);
+    if(!user) {
+      throw new Error("No user with that Id");
+    }
+
+    // Check if mine is inActive and if redeemableCount is greater than 0
+    if(!user?.mineActive && user?.redeemableCount > 0) {
+      await db.patch(userId, { minedCount: (user?.minedCount ?? 0) + user?.redeemableCount, redeemableCount: 0 });
+    }
+  }
+});
+
+
 // Boost
 
 export const speedBoost = mutation({

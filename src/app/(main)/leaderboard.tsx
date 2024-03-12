@@ -118,7 +118,7 @@ export default function LeaderboardPage() {
                               key={index}
                               className="flex flex-row items-center justify-between gap-2"
                             >
-                              <View className="flex h-20 w-3/4 flex-row items-center justify-between rounded-r-[30px] bg-[#15BDCF] p-2">
+                              <View className="flex h-16 w-3/4 flex-row items-center justify-between rounded-r-[30px] bg-[#15BDCF] p-2">
                                 <View className="flex flex-row items-center justify-center gap-2">
                                   <Text className="text-xl font-medium text-white">
                                     1
@@ -133,10 +133,10 @@ export default function LeaderboardPage() {
                                   </Text>
                                 </View>
 
-                                <View className="h-16 w-16 items-center justify-center rounded-full bg-white">
+                                <View className="h-12 w-12 items-center justify-center rounded-full bg-white">
                                   <Image
                                     source={require("../../../assets/main/avatar.png")}
-                                    style={{ width: 40, height: 40 }}
+                                    style={{ width: 30, height: 30 }}
                                   />
                                 </View>
                               </View>
@@ -157,7 +157,7 @@ export default function LeaderboardPage() {
                               key={index}
                               className="flex flex-row items-center justify-between gap-2"
                             >
-                              <View className="flex h-20 w-3/5 flex-row items-center justify-between rounded-r-[30px] bg-[#5F37E6] p-2">
+                              <View className="flex h-16 w-3/5 flex-row items-center justify-between rounded-r-[30px] bg-[#5F37E6] p-2">
                                 <View className="flex flex-row items-center justify-center gap-2">
                                   <Text className="text-xl font-medium text-white">
                                     2
@@ -172,10 +172,10 @@ export default function LeaderboardPage() {
                                   </Text>
                                 </View>
 
-                                <View className="h-16 w-16 items-center justify-center rounded-full bg-white">
+                                <View className="h-12 w-12 items-center justify-center rounded-full bg-white">
                                   <Image
                                     source={require("../../../assets/main/avatar.png")}
-                                    style={{ width: 40, height: 40 }}
+                                    style={{ width: 30, height: 30 }}
                                   />
                                 </View>
                               </View>
@@ -195,7 +195,7 @@ export default function LeaderboardPage() {
                             key={index}
                             className="flex flex-row items-center justify-between gap-2"
                           >
-                            <View className="flex h-20 w-3/6 flex-row items-center justify-between rounded-r-[30px] bg-[#000000] p-2">
+                            <View className="flex h-16 w-3/6 flex-row items-center justify-between rounded-r-[30px] bg-[#000000] p-2">
                               <View className="flex flex-row items-center justify-center gap-2">
                                 <Text className="text-xl font-medium text-white">
                                   3
@@ -210,10 +210,10 @@ export default function LeaderboardPage() {
                                 </Text>
                               </View>
 
-                              <View className="h-16 w-16 items-center justify-center rounded-full bg-white">
+                              <View className="h-12 w-12 items-center justify-center rounded-full bg-white">
                                 <Image
                                   source={require("../../../assets/main/avatar.png")}
-                                  style={{ width: 40, height: 40 }}
+                                  style={{ width: 30, height: 30 }}
                                 />
                               </View>
                             </View>
@@ -242,7 +242,7 @@ export default function LeaderboardPage() {
                     <FlashList
                       data={data ? data.sortedUsers : []}
                       renderItem={({ item, index }) => (
-                        <View className="my-2 flex flex-row items-center justify-between rounded-lg">
+                        <View className="my-3 flex flex-row items-center justify-between rounded-lg">
                           <View className="flex flex-row items-center justify-start gap-4">
                             <View className="h-12 w-12 items-center justify-center rounded-full bg-black">
                               <Image

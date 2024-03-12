@@ -148,16 +148,16 @@ export default function DashboardPage() {
                   onPress={() =>
                     router.push({ pathname: "/(main)/referral", params })
                   }
-                  className="flex w-full flex-row items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 bg-[#EBEBEB] p-4"
+                  className="flex w-full flex-row items-center justify-center gap-2 rounded-xl border border-dashed border-[#B3B2B2]/50 bg-[#EBEBEB] p-4"
                 >
                   <Image
                     source={require("../../../assets/main/invite.png")}
-                    style={{ width: 40, height: 40 }}
+                    style={{ width: 50, height: 50 }}
                     alt="Referre"
                   />
                   <View className="flex flex-col items-start justify-center gap-1">
-                    <Text className="text-lg font-medium">Invite Friends</Text>
-                    <Text className="text-sm">
+                    <Text className="text-lg font-normal text-black">Invite Friends</Text>
+                    <Text className="text-sm text-light text-[#989898]">
                       The more users you refer, the more star you earn
                     </Text>
                   </View>

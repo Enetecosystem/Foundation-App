@@ -56,26 +56,26 @@ export default function Register() {
                 source={require("../../../assets/miner_onboard_img-1.png")}
                 style={{ width: 170, height: 170, alignItems: "center" }}
               />
-              <Text className="text-2xl font-medium tracking-normal">
+              <Text className="text-3xl font-medium tracking-normal">
                 Welcome to Enetwallet
               </Text>
-              <Text className="text-lg font-light tracking-widest">
+              <Text className="text-xl font-light tracking-widest">
                 THE Web3 STANDARD
               </Text>
             </View>
             <View className="flex h-auto w-full flex-col items-center justify-center px-[20px] py-5">
-              <Text className="mb-[27px] text-lg font-medium">
+              <Text className="mb-[27px] text-xl font-medium">
                 Input your email address
               </Text>
               <TextInput
                 placeholder="Email address"
-                className="mb-[16px] w-full rounded-md bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
+                className="mb-[16px] w-full text-black font-medium text-lg rounded-md bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
                 onChangeText={(text) => setEmail(text)}
               />
               {!userIsOnboarded && (
                 <TextInput
                   placeholder="Referral"
-                  className="w-full rounded-md bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
+                  className="w-full text-black font-medium text-lg rounded-md text-black bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
                   value={referreeCode}
                   onChangeText={(text) => setReferreeCode(text)}
                 />
@@ -84,14 +84,14 @@ export default function Register() {
                 <TextInput
                   placeholder="Password"
                   value={password}
-                  className="w-full rounded-md bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
+                  className="w-full text-black font-medium text-lg rounded-md text-black bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
                   onChangeText={(text) => setPassword(text)}
                 />
               )}
               <View className="w-full items-end justify-center">
                 {!userIsOnboarded && (
                   <Link
-                    className="text-blue-500"
+                    className="font-medium text-blue-500"
                     href="/#"
                     onPress={async (e) => {
                       e.preventDefault();

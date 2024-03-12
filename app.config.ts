@@ -24,6 +24,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         origin: "https://n",
       },
     ],
+    [
+      "expo-font",
+      {
+        "fonts": ["./assets/fonts/Nunito_Sans/NunitoSans-Italic-VariableFont_YTLC,opsz,wdth,wght.ttf", "./assets/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf", "./assets/fonts/Plus_Jakarta_Sans/PlusJakartaSans-VariableFont_wght.ttf"]
+      }
+    ]
   ],
   name: "enet_miner",
   slug: "enet-miner",
