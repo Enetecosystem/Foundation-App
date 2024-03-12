@@ -6,14 +6,13 @@ import { api } from "@/convex/generated/api";
 import { Id } from "@/convex/generated/dataModel";
 import { Octicons } from "@expo/vector-icons";
 import { useAction, useQuery } from "convex/react";
-import { format, formatDuration } from "date-fns";
+import { format } from "date-fns";
 import { Image } from "expo-image";
-import { Link, Stack, router, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
-  Platform,
   SafeAreaView,
   Text,
   TouchableOpacity,
@@ -59,7 +58,7 @@ export default function DashboardPage() {
                         {
                           text: "Cancel",
                           style: "cancel",
-                          onPress: () => {},
+                          onPress: () => { },
                         },
                         {
                           text: "Start",
