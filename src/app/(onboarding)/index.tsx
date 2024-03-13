@@ -3,7 +3,6 @@ import { Link, router } from "expo-router";
 import {
   Keyboard,
   KeyboardAvoidingView,
-  Platform,
   TouchableWithoutFeedback,
   View,
   Text,
@@ -38,10 +37,9 @@ export default function Register() {
           return;
         } else {
           setUserIsOnbaorded(true);
-          console.log(isOnboarded, "Is true");
         }
       } catch (e: any) {
-        return Alert.alert(e.message ?? e.toString());
+        return Alert.alert("Onboarding error", e.message ?? e.toString());
       }
     }
   }, [userIsOnboarded]);
