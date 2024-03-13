@@ -17,7 +17,7 @@ export const getData = async (
 ): Promise<Record<string, any> | string | null> => {
   try {
     const value = storage.getString(key);
-    return shouldParse ? JSON.parse(value) : value;
+    return shouldParse && value ? JSON.parse(value) : value;
   } catch (e: any) {
     console.log(e, ":::Error reading data");
     throw new Error(e.message ?? e.toString());
