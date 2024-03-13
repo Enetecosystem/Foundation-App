@@ -5,9 +5,12 @@ import { ClientEnv, Env } from "./env";
 export default ({ config }: ConfigContext): ExpoConfig => ({
   // "expo": {
   ...config,
+  name: "Enet miner",
+  slug: "enet_miner",
   scheme: "acme",
   userInterfaceStyle: "automatic",
   orientation: "portrait",
+  icon: "./assets/icon.png",
   splash: {
     image: "./assets/splash.png",
     resizeMode: "contain",
@@ -25,8 +28,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ]
   ],
-  name: "enet_miner",
-  slug: "enet-miner",
   extra: {
     ...ClientEnv,
     router: {
@@ -39,6 +40,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   owner: "fullsnack_mimi",
   android: {
     package: "com.enetminer.enet",
+    adaptiveIcon: {
+      foregroundImage: "./assets/icon.png"
+    }
   },
   ios: {
     bundleIdentifier: Env.BUNDLE_ID,

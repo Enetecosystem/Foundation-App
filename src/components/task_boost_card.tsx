@@ -303,7 +303,7 @@ const Boosts = ({ boosterList }: { boosterList: Array<any>}) => (
           <Text className="text-lg">{boost?.name}</Text>
           <View className="flex flex-row items-center justify-start gap-2">
             <Image
-              source={require("../../assets/enet-logo.png")}
+              source={require("../../assets/icon.png")}
               style={{ width: 20, height: 20 }}
               contentFit="cover"
             />

@@ -54,10 +54,10 @@ export default function Register() {
                 source={require("../../../assets/miner_onboard_img-1.png")}
                 style={{ width: 170, height: 170, alignItems: "center" }}
               />
-              <Text className="text-3xl font-medium tracking-normal">
+              <Text className="text-[24px] font-medium tracking-normal">
                 Welcome to Enetwallet
               </Text>
-              <Text className="text-xl font-light tracking-widest">
+              <Text className="text-[14px] font-light tracking-widest">
                 THE Web3 STANDARD
               </Text>
             </View>
