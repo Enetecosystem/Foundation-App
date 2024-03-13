@@ -5,7 +5,7 @@ const path = require("path");
 const APP_ENV = process.env.APP_ENV ?? "development";
 const envPath = path.resolve(__dirname, `.env.${APP_ENV}`);
 
-if (APP_ENV !== "staging" && APP_ENV !== "expo") {
+if (APP_ENV !== "expo") {
   require("dotenv").config({
     path: envPath,
   });
@@ -14,8 +14,8 @@ if (APP_ENV !== "staging" && APP_ENV !== "expo") {
 // creating the schema
 const client = z.object({
   APP_ENV: z.enum(["local", "staging", "production", "expo"]),
-  CONVEX_URL: z.string().url(),
-  CONVEX_DEPLOYMENT: z.string(),
+  // CONVEX_URL: z.string().url(),
+  // CONVEX_DEPLOYMENT: z.string(),
 });
 
 const buildTime = z.object({
@@ -32,8 +32,8 @@ const _clientEnv = {
   APP_ENV,
 
   // ADD YOUR ENV VARS HERE TOO
-  CONVEX_DEPLOYMENT: process.env.CONVEX_DEPLOYMENT,
-  CONVEX_URL: process.env.CONVEX_URL,
+  // CONVEX_DEPLOYMENT: process.env.CONVEX_DEPLOYMENT,
+  // CONVEX_URL: process.env.CONVEX_URL,
 };
 
 /**
