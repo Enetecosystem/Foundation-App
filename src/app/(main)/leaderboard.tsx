@@ -166,11 +166,6 @@ export default function LeaderboardPage() {
                                   <Text className="font-[nunito] text-xl font-medium text-white">
                                     2
                                   </Text>
-                                  {/* <MaterialCommunityIcons
-                          name="crown"
-                          size={24}
-                          color="black"
-                        /> */}
                                   <Text className="ml-4 font-[nunito] text-xl font-normal text-white">
                                     {user.referralCount.toLocaleString("en-US")}
                                   </Text>
@@ -178,7 +173,7 @@ export default function LeaderboardPage() {
 
                                 <View className="h-12 w-12 items-center justify-center rounded-full bg-white">
                                   <Image
-                                    source={require("../../../assets/main/avatar.png")}
+                                    source={require("../../../assets/main/avatar-2.png")}
                                     style={{ width: 30, height: 30 }}
                                   />
                                 </View>
@@ -204,11 +199,6 @@ export default function LeaderboardPage() {
                                 <Text className="font-[nunito] text-xl font-medium text-white">
                                   3
                                 </Text>
-                                {/* <MaterialCommunityIcons
-                          name="crown"
-                          size={24}
-                          color="black"
-                        /> */}
                                 <Text className="ml-4 font-[nunito] text-xl font-normal text-white">
                                   {user.referralCount.toLocaleString("en-US")}
                                 </Text>
@@ -216,7 +206,7 @@ export default function LeaderboardPage() {
 
                               <View className="h-12 w-12 items-center justify-center rounded-full bg-white">
                                 <Image
-                                  source={require("../../../assets/main/avatar.png")}
+                                  source={require("../../../assets/main/avatar-2.png")}
                                   style={{ width: 30, height: 30 }}
                                 />
                               </View>
