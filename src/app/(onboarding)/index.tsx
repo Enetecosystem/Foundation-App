@@ -54,26 +54,29 @@ export default function Register() {
                 source={require("../../../assets/miner_onboard_img-1.png")}
                 style={{ width: 170, height: 170, alignItems: "center" }}
               />
-              <Text className="text-[24px] font-medium tracking-normal">
+              <Text
+                style={{ fontSize: 24 }}
+                className="font-[nunito] text-[24px] font-medium tracking-normal"
+              >
                 Welcome to Enetwallet
               </Text>
-              <Text className="text-[14px] font-light tracking-widest">
+              <Text className="font-[nunito] text-[14px] font-light tracking-widest">
                 THE Web3 STANDARD
               </Text>
             </View>
             <View className="flex h-auto w-full flex-col items-center justify-center px-[20px] py-5">
-              <Text className="mb-[27px] text-xl font-medium">
+              <Text className="mb-[27px] font-[nunito] text-xl font-medium">
                 Input your email address
               </Text>
               <TextInput
                 placeholder="Email address"
-                className="mb-[16px] w-full text-black font-medium text-lg rounded-md bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
+                className="mb-[16px] w-full rounded-md bg-[#EBEBEB] px-6 py-4 font-[nunito] text-lg font-medium text-black placeholder:font-light placeholder:text-black"
                 onChangeText={(text) => setEmail(text)}
               />
               {!userIsOnboarded && (
                 <TextInput
                   placeholder="Referral"
-                  className="w-full text-black font-medium text-lg rounded-md text-black bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
+                  className="w-full rounded-md bg-[#EBEBEB] px-6 py-4 font-[nunito] text-lg font-medium text-black placeholder:font-light placeholder:text-black"
                   value={referreeCode}
                   onChangeText={(text) => setReferreeCode(text)}
                 />
@@ -82,14 +85,14 @@ export default function Register() {
                 <TextInput
                   placeholder="Password"
                   value={password}
-                  className="w-full text-black font-medium text-lg rounded-md text-black bg-[#EBEBEB] px-6 py-4 placeholder:font-light placeholder:text-black"
+                  className="w-full rounded-md bg-[#EBEBEB] px-6 py-4 font-[nunito] text-lg font-medium text-black placeholder:font-light placeholder:text-black"
                   onChangeText={(text) => setPassword(text)}
                 />
               )}
               <View className="w-full items-end justify-center">
                 {!userIsOnboarded && (
                   <Link
-                    className="font-medium text-blue-500"
+                    className="font-[nunito] font-medium text-blue-500"
                     href="/#"
                     onPress={async (e) => {
                       e.preventDefault();
@@ -103,7 +106,7 @@ export default function Register() {
                 )}
                 {userIsOnboarded && (
                   <Link
-                    className="font-medium text-blue-500"
+                    className="font-[nunito] font-medium text-blue-500"
                     href="/#"
                     onPress={async (e) => {
                       e.preventDefault();
@@ -123,7 +126,7 @@ export default function Register() {
                 <Link
                   suppressHighlighting
                   href="/otp"
-                  className="flex items-center flex-1 justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
+                  className="flex flex-1 items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center font-[nunito] text-lg font-normal text-white transition-colors"
                   onPress={async (e) => {
                     try {
                       e.preventDefault();
@@ -175,10 +178,7 @@ export default function Register() {
                         params: { email, userId },
                       });
                     } catch (e: any) {
-                      Alert.alert(
-                        "Onboarding error",
-                        e.message,
-                      );
+                      Alert.alert("Onboarding error", e.message);
                     }
                   }}
                 >
@@ -188,7 +188,7 @@ export default function Register() {
                 <Link
                   suppressHighlighting
                   href="/#"
-                  className="flex max-w-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
+                  className="flex w-16 max-w-16 items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center font-[nunito] text-lg font-normal text-white transition-colors"
                   onPress={(e) => {
                     e.preventDefault();
 
@@ -199,7 +199,7 @@ export default function Register() {
                 </Link>
               </View>
 
-              <Text className="mt-4 text-center leading-6 text-black sm:max-w-xl">
+              <Text className="mt-4 text-center font-[nunito] leading-6 text-black sm:max-w-xl">
                 By continuing, you agree to our{" "}
                 <Link
                   // suppressHighlighting

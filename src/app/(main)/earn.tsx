@@ -33,13 +33,13 @@ export default function EarnPage() {
             />
             <View className="flex w-full flex-col px-[20px] py-4">
               <View className="w-full items-center justify-center gap-2">
-                <Text className="text-center font-light text-black">
+                <Text className="text-center font-[nunito] font-light text-black">
                   Total XP
                 </Text>
-                <Text className="text-center text-xl font-medium text-black">
+                <Text className="text-center font-[nunito] text-xl font-medium text-black">
                   420,000,000
                 </Text>
-                <Text className="text-center text-lg font-light">
+                <Text className="text-center font-[nunito] text-lg font-light">
                   Simple task for more points {"\n"} The more points you have,
                   the higher you will climb on the leaderboard and get a bigger
                   $EN Airdrop.
@@ -65,7 +65,7 @@ export default function EarnPage() {
                       {index === 2 && <Text>Comment on post</Text>}
                       {index === 3 && <Text>Like post</Text>}
                     </View>
-                    <Text className="my-6 text-2xl font-medium tracking-wider">
+                    <Text className="my-6 font-[nunito] text-2xl font-medium tracking-wider">
                       +{index % 2 === 0 ? "100" : "50"} Xp
                     </Text>
 
@@ -73,7 +73,7 @@ export default function EarnPage() {
                       disabled={index !== 1}
                       className="w-full items-center justify-center rounded-md bg-black p-2 disabled:bg-black/30"
                     >
-                      <Text className="font-medium text-white">
+                      <Text className="font-[nunito] font-medium text-white">
                         {index === 1 ? "Claim" : "Go"}
                       </Text>
                     </TouchableOpacity>

@@ -65,13 +65,13 @@ export default function PasswordPage() {
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 label="Password"
-                className="mb-[16px] w-full rounded-md border bg-transparent px-6 py-4 placeholder:font-light placeholder:text-black focus:border-black"
+                className="mb-[16px] w-full rounded-md border bg-transparent px-6 py-4 font-[nunito] placeholder:font-light placeholder:text-black focus:border-black"
               />
               <Input
                 value={confirm}
                 onChangeText={(text) => setConfirm(text)}
                 label="Confirm Password"
-                className="mb-[16px] w-full rounded-md border bg-transparent px-6 py-4 placeholder:font-light placeholder:text-black focus:border-black"
+                className="mb-[16px] w-full rounded-md border bg-transparent px-6 py-4 font-[nunito] placeholder:font-light placeholder:text-black focus:border-black"
               />
 
               <PasswordValidation password={password} />
@@ -101,7 +101,7 @@ export default function PasswordPage() {
                     );
                   }
                 }}
-                className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
+                className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center font-[nunito] text-lg font-normal text-white transition-colors"
               >
                 Continue
                 {/* <Text className=""></Text> */}
@@ -128,7 +128,7 @@ function PasswordValidation({ password }: { password: string }) {
     // <GestureHandlerRootView className="w-full flex-1">
     <View className="flex w-full flex-col items-start justify-center gap-3">
       {/* Validate password strength here */}
-      <Text className="text-black">Password strength</Text>
+      <Text className="font-[nunito] text-black">Password strength</Text>
       <View className="flex w-full items-start justify-center bg-gray-400">
         <Animated.View
           style={{
@@ -159,7 +159,7 @@ function PasswordValidation({ password }: { password: string }) {
               }}
             ></View>
 
-            <Text className="font-light">
+            <Text className="font-[nunito] font-light">
               {index === 0
                 ? "Not shorter than 8 characters"
                 : index === 1

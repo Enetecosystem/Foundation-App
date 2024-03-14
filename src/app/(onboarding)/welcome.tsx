@@ -21,7 +21,6 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/generated/api";
 import { Id } from "@/convex/generated/dataModel";
 import { storeData } from "@/storageUtils";
-import { isNicknameValid } from "convex/onboarding";
 
 export default function WelcomePage() {
   const params = useLocalSearchParams();
@@ -36,9 +35,7 @@ export default function WelcomePage() {
 
   return (
     <SafeAreaView className="bg-background">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "android" ? "height" : "padding"}
-      >
+      <KeyboardAvoidingView behavior={"position"}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="min-h-screen w-full flex-1 bg-[#F5F5F5]">
             <View className="w-full">
@@ -52,7 +49,7 @@ export default function WelcomePage() {
                 data={[...new Array(4).keys()]}
                 scrollAnimationDuration={700}
                 style={{ alignItems: "center", justifyContent: "center" }}
-                onSnapToItem={(index) => { }}
+                onSnapToItem={(index) => {}}
                 defaultIndex={0}
                 renderItem={({ index, item }) => (
                   <View
@@ -74,10 +71,10 @@ export default function WelcomePage() {
 
                     {index === 0 && (
                       <View>
-                        <Text className="text-left text-xl font-medium">
+                        <Text className="text-left font-[nunito] text-xl font-medium">
                           Welcome to Enetecosystem
                         </Text>
-                        <Text className="text-left text-lg font-light">
+                        <Text className="text-left font-[nunito] text-lg font-light">
                           A decentralised blockchain ecosystem, building
                           innovative solutions to embrace the rapidly advancing
                           digital landscape.
@@ -87,10 +84,10 @@ export default function WelcomePage() {
 
                     {index === 1 && (
                       <View>
-                        <Text className="text-left text-xl font-medium">
+                        <Text className="text-left font-[nunito] text-xl font-medium">
                           Kickstarting our MVP program
                         </Text>
-                        <Text className="text-left text-lg font-light">
+                        <Text className="text-left font-[nunito] text-lg font-light">
                           The "Most Valuable Person of the Month/Year" is an
                           exciting program within our ecosystem designed to
                           recognize and reward community members or individual
@@ -101,10 +98,10 @@ export default function WelcomePage() {
                     )}
                     {index === 2 && (
                       <View>
-                        <Text className="text-left text-xl font-medium">
+                        <Text className="text-left font-[nunito] text-xl font-medium">
                           Mining and Xp
                         </Text>
-                        <Text className="text-left text-lg font-light">
+                        <Text className="text-left font-[nunito] text-lg font-light">
                           There are 2 ways you can earn $EN before launching.
                           Through Mining on this App and earning Xp by
                           performing ecosystem tasks.
@@ -114,10 +111,10 @@ export default function WelcomePage() {
 
                     {index >= 3 && (
                       <View>
-                        <Text className="text-left text-xl font-medium">
+                        <Text className="text-left font-[nunito] text-xl font-medium">
                           Claim a nickname
                         </Text>
-                        <Text className="text-left text-lg font-light">
+                        <Text className="text-left font-[nunito] text-lg font-light">
                           your friends can use this name to join
                         </Text>
                       </View>
@@ -131,8 +128,16 @@ export default function WelcomePage() {
                             {index === 0 && (
                               <Image
                                 source={require("../../../assets/welcome/welcome-1.png")}
-                                style={{ width: 200, height: 200 }}
+                                style={{
+                                  width: 200,
+                                  // height: 200,
+                                  aspectRatio: 1,
+                                  flex: 1,
+                                  alignSelf: "center",
+                                }}
+                                resizeMode="contain"
                                 contentFit="contain"
+                                contentPosition="center"
                               />
                             )}
                             {index === 1 && (
@@ -140,10 +145,15 @@ export default function WelcomePage() {
                                 source={require("../../../assets/welcome/welcome-2.png")}
                                 style={{
                                   width: 150,
-                                  height: 190,
+                                  // height: 190,
                                   marginTop: 20,
+                                  aspectRatio: 1,
+                                  flex: 1,
+                                  alignSelf: "center",
                                 }}
+                                resizeMode="contain"
                                 contentFit="contain"
+                                contentPosition="center"
                               />
                             )}
                             {index === 2 && (
@@ -151,10 +161,15 @@ export default function WelcomePage() {
                                 source={require("../../../assets/welcome/welcome-3.png")}
                                 style={{
                                   width: 180,
-                                  height: 160,
+                                  // height: 160,
                                   marginTop: 30,
+                                  aspectRatio: 1,
+                                  flex: 1,
+                                  alignSelf: "center",
                                 }}
+                                resizeMode="contain"
                                 contentFit="contain"
+                                contentPosition="center"
                               />
                             )}
 
@@ -196,14 +211,15 @@ export default function WelcomePage() {
                           <Input
                             value={nickname}
                             onBlur={async () => {
-                              const isValid = await isNicknameValid({ nickname });
+                              const isValid = await isNicknameValid({
+                                nickname,
+                              });
 
                               setIsValid(isValid);
-
                             }}
                             onChangeText={setNickname}
                             placeholder="Nickname"
-                            className="mb-1 w-full rounded-xl border bg-slate-100 px-6 py-4 placeholder:font-light placeholder:text-black focus:border-black"
+                            className="mb-1 w-full rounded-xl border bg-slate-100 px-6 py-4 font-[nunito] placeholder:font-light placeholder:text-black focus:border-black"
                           />
                           <View className="flex flex-row items-start justify-start gap-1">
                             <MaterialIcons
@@ -211,10 +227,10 @@ export default function WelcomePage() {
                               size={14}
                               color="#15BDCF"
                             />
-                            <Text className="text-wrap px-2 text-start font-light text-white">
+                            <Text className="text-wrap px-2 text-start font-[nunito] font-light text-white">
                               When creating a nickname, use only © letters,
                               numbers, and periods.{"\n"}
-                              <Text className="font-normal text-[#15BDCF]">
+                              <Text className="font-[nunito] font-normal text-[#15BDCF]">
                                 Example: your.name01
                               </Text>
                             </Text>
@@ -232,10 +248,11 @@ export default function WelcomePage() {
                                 );
                               }
 
-
                               if (!isValid) {
-
-                                return Alert.alert("Onboard error", "Nickname must be valid or is already taken");
+                                return Alert.alert(
+                                  "Onboard error",
+                                  "Nickname must be valid or is already taken",
+                                );
                               }
 
                               await storeNickname({
@@ -255,7 +272,7 @@ export default function WelcomePage() {
                           }}
                           className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-white p-4"
                         >
-                          <Text className="text-center text-lg font-normal text-black">
+                          <Text className="text-center font-[nunito] text-lg font-normal text-black">
                             Create
                           </Text>
                         </TouchableOpacity>

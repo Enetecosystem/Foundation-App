@@ -23,8 +23,11 @@ export const Overview: FC<IOverviewProps> = ({
   };
 
   return (
-    <View className="h-[160px] rounded-xl overflow-hidden bg-transparent">
-      <ImageBackground source={require("../../assets/main/overview-bg.png")} style={{ justifyContent: 'center' }}>
+    <View className="h-[160px] overflow-hidden rounded-xl bg-transparent">
+      <ImageBackground
+        source={require("../../assets/main/overview-bg.png")}
+        style={{ justifyContent: "center" }}
+      >
         {/* States design */}
         <View className="flex h-full w-full flex-col items-start justify-between p-4">
           <View className="flex w-full flex-row items-center justify-between">
@@ -34,30 +37,32 @@ export const Overview: FC<IOverviewProps> = ({
 
             <View className="flex flex-row items-center justify-center gap-2">
               <FontAwesome5 name="users" size={20} color="#ABABAB" />
-              <Text className="text-lg font-normal text-[#ABABAB]">
+              <Text className="font-[nunito] text-lg font-normal text-[#ABABAB]">
                 {totalUsers.toLocaleString("en-US")}
               </Text>
             </View>
           </View>
           <View className="flex w-full flex-row items-center justify-start gap-20 px-8">
             <View className="flex flex-col items-start justify-center gap-2">
-              <Text className="text-lg font-light text-[#ABABAB]">Referrals</Text>
-              <Text className="text-2xl font-medium text-white">
+              <Text className="font-[nunito] text-lg font-light text-[#ABABAB]">
+                Referrals
+              </Text>
+              <Text className="font-[nunito] text-2xl font-medium text-white">
                 {referrals.toLocaleString("en-US")}
               </Text>
             </View>
             <View className="flex flex-col items-start justify-center gap-2">
-              <Text className="text-lg font-light text-[#ABABAB]">
+              <Text className="font-[nunito] text-lg font-light text-[#ABABAB]">
                 Global Rank
               </Text>
-              <Text className="text-2xl font-medium text-white">
+              <Text className="font-[nunito] text-2xl font-medium text-white">
                 {globalRank.toLocaleString("en-US")}
               </Text>
             </View>
           </View>
 
           <View className="flex w-full flex-row items-center justify-start gap-6 px-8">
-            <Text className="text-lg font-light text-white">
+            <Text className="font-[nunito] text-lg font-light text-white">
               Referral Code: {referralCode}
             </Text>
 
@@ -75,7 +80,6 @@ export const Overview: FC<IOverviewProps> = ({
     </View>
   );
 };
-
 
 // interface IGradientBackgroundProps {
 //   children: ReactNode

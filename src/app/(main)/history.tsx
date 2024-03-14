@@ -41,7 +41,9 @@ export default function HistoryPage() {
               }}
             />
             <View className="flex w-full flex-col px-[20px] py-4">
-              <Text className="text-lg font-normal text-black">Today</Text>
+              <Text className="font-[nunito] text-lg font-normal text-black">
+                Today
+              </Text>
               <View className="w-full flex-1 pb-24">
                 <FlashList
                   data={getHistory ? getHistory : []}
@@ -66,10 +68,10 @@ export default function HistoryPage() {
 
                       {item.type === "xp" && (
                         <View className="flex flex-1 flex-col items-start justify-start">
-                          <Text className="text-start text-lg font-normal">
+                          <Text className="text-start font-[nunito] text-lg font-normal">
                             {item.message}
                           </Text>
-                          <Text className="text-black/60">
+                          <Text className="font-[nunito] text-black/60">
                             {new Date(item._creationTime).toLocaleTimeString()}
                           </Text>
                         </View>
@@ -77,17 +79,17 @@ export default function HistoryPage() {
 
                       {item.type === "rank" && (
                         <View className="flex flex-1 flex-col items-start justify-start">
-                          <Text className="text-start text-lg font-normal">
+                          <Text className="text-start font-[nunito] text-lg font-normal">
                             {item.message}
                           </Text>
-                          <Text>
+                          <Text className="font-[nunito]">
                             {new Date(item._creationTime).toLocaleTimeString()}
                           </Text>
                         </View>
                       )}
 
                       {item.type === "xp" && (
-                        <Text className="mt-4 text-lg font-medium">
+                        <Text className="mt-4 font-[nunito] text-lg font-medium">
                           {item?.extra} XP
                         </Text>
                       )}

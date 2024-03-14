@@ -26,6 +26,7 @@ export default function LeaderboardPage() {
   const params = useLocalSearchParams();
 
   const { top, bottom } = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
 
   const data = useQuery(api.queries.getLeaderBoard, {
     userId: params?.userId as Id<"user">,
@@ -35,14 +36,15 @@ export default function LeaderboardPage() {
 
   return (
     <SafeAreaView className="bg-background">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "android" ? "height" : "padding"}
-      >
+      <KeyboardAvoidingView behavior={"position"}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="relative h-screen min-h-screen w-full">
+          <View
+            style={{ height }}
+            className="relative h-screen min-h-screen w-full"
+          >
             <View
-              style={{ bottom: bottom + 92 }}
-              className="absolute left-0 right-0 z-50 mx-3 flex h-24 flex-row items-center justify-between gap-2 rounded-md bg-[#ABABAB] px-6"
+              style={{ height: 80, top: height - 180 }}
+              className="absolute left-0 right-0 z-50 mx-3 flex flex-row items-center justify-between gap-2 rounded-md bg-[#ABABAB] px-6"
             >
               <View className="h-12 w-12 items-center justify-center rounded-full bg-black">
                 <Image
@@ -53,8 +55,8 @@ export default function LeaderboardPage() {
 
               <View className="flex flex-col gap-4">
                 <View className="flex flex-row items-center justify-between gap-8">
-                  <Text className="text-white">Referrals</Text>
-                  <Text className="text-white">
+                  <Text className="font-[nunito] text-white">Referrals</Text>
+                  <Text className="font-[nunito] text-white">
                     {data &&
                       (data.user
                         ? data?.user?.referralCount
@@ -63,8 +65,8 @@ export default function LeaderboardPage() {
                   </Text>
                 </View>
                 <View className="flex flex-row items-center justify-between gap-8">
-                  <Text className="text-white">XP</Text>
-                  <Text className="text-white">
+                  <Text className="font-[nunito] text-white">XP</Text>
+                  <Text className="font-[nunito] text-white">
                     {data &&
                       (data.user ? data?.user?.xpCount : 0).toLocaleString(
                         "en-US",
@@ -74,13 +76,15 @@ export default function LeaderboardPage() {
               </View>
 
               <View className="flex flex-col gap-2">
-                <Text className="text-white">Position | Members</Text>
+                <Text className="font-[nunito] text-white">
+                  Position | Members
+                </Text>
                 <View className="flex flex-row items-center justify-between gap-8 rounded-md bg-white px-6 py-2">
-                  <Text className="font-medium text-black">
+                  <Text className="font-[nunito] font-medium text-black">
                     {(data ? data?.globalRank : 0).toLocaleString("en-US")}
                   </Text>
                   <Text>|</Text>
-                  <Text className="font-medium text-black">
+                  <Text className="font-[nunito] font-medium text-black">
                     {(data ? data?.totalUsers : 0).toLocaleString("en-US")}
                   </Text>
                 </View>
@@ -95,7 +99,7 @@ export default function LeaderboardPage() {
               />
               <TouchableOpacity
                 activeOpacity={1}
-                className="flex h-full w-full flex-col py-4 pb-20"
+                className="flex h-full w-full flex-col py-4 pb-32"
               >
                 <View className="flex w-full flex-col py-4">
                   <View className="flex w-full flex-col px-[20px]">
@@ -103,7 +107,7 @@ export default function LeaderboardPage() {
                       <View className="h-16 w-16 items-center justify-center rounded-lg bg-[#FFFFFF]/20">
                         <Text className="text-4xl">👍</Text>
                       </View>
-                      <Text className="flex-1 text-wrap text-lg text-black/60">
+                      <Text className="flex-1 text-wrap font-[nunito] text-lg text-black/60">
                         You are doing better than 80% of others
                       </Text>
                     </View>
@@ -120,7 +124,7 @@ export default function LeaderboardPage() {
                             >
                               <View className="flex h-16 w-3/4 flex-row items-center justify-between rounded-r-[30px] bg-[#15BDCF] p-2">
                                 <View className="flex flex-row items-center justify-center gap-2">
-                                  <Text className="text-xl font-medium text-white">
+                                  <Text className="font-[nunito] text-xl font-medium text-white">
                                     1
                                   </Text>
                                   <MaterialCommunityIcons
@@ -128,7 +132,7 @@ export default function LeaderboardPage() {
                                     size={24}
                                     color="black"
                                   />
-                                  <Text className="ml-4 text-xl font-normal text-black">
+                                  <Text className="ml-4 font-[nunito] text-xl font-normal text-black">
                                     {user.referralCount.toLocaleString("en-US")}
                                   </Text>
                                 </View>
@@ -141,10 +145,10 @@ export default function LeaderboardPage() {
                                 </View>
                               </View>
                               <View className="flex flex-1 flex-col">
-                                <Text className="text-sm font-medium">
+                                <Text className="font-[nunito] text-sm font-medium">
                                   {user?.nickname}
                                 </Text>
-                                <Text className="text-xs font-normal">
+                                <Text className="font-[nunito] text-xs font-normal">
                                   {user.xpCount.toLocaleString("en-US")} Xp
                                 </Text>
                               </View>
@@ -159,7 +163,7 @@ export default function LeaderboardPage() {
                             >
                               <View className="flex h-16 w-3/5 flex-row items-center justify-between rounded-r-[30px] bg-[#5F37E6] p-2">
                                 <View className="flex flex-row items-center justify-center gap-2">
-                                  <Text className="text-xl font-medium text-white">
+                                  <Text className="font-[nunito] text-xl font-medium text-white">
                                     2
                                   </Text>
                                   {/* <MaterialCommunityIcons
@@ -167,7 +171,7 @@ export default function LeaderboardPage() {
                           size={24}
                           color="black"
                         /> */}
-                                  <Text className="ml-4 text-xl font-normal text-white">
+                                  <Text className="ml-4 font-[nunito] text-xl font-normal text-white">
                                     {user.referralCount.toLocaleString("en-US")}
                                   </Text>
                                 </View>
@@ -180,10 +184,10 @@ export default function LeaderboardPage() {
                                 </View>
                               </View>
                               <View className="flex flex-1 flex-col">
-                                <Text className="text-sm font-medium">
+                                <Text className="font-[nunito] text-sm font-medium">
                                   {user?.nickname}
                                 </Text>
-                                <Text className="text-xs font-normal">
+                                <Text className="font-[nunito] text-xs font-normal">
                                   {user.xpCount.toLocaleString("en-US")} Xp
                                 </Text>
                               </View>
@@ -197,7 +201,7 @@ export default function LeaderboardPage() {
                           >
                             <View className="flex h-16 w-3/6 flex-row items-center justify-between rounded-r-[30px] bg-[#000000] p-2">
                               <View className="flex flex-row items-center justify-center gap-2">
-                                <Text className="text-xl font-medium text-white">
+                                <Text className="font-[nunito] text-xl font-medium text-white">
                                   3
                                 </Text>
                                 {/* <MaterialCommunityIcons
@@ -205,7 +209,7 @@ export default function LeaderboardPage() {
                           size={24}
                           color="black"
                         /> */}
-                                <Text className="ml-4 text-xl font-normal text-white">
+                                <Text className="ml-4 font-[nunito] text-xl font-normal text-white">
                                   {user.referralCount.toLocaleString("en-US")}
                                 </Text>
                               </View>
@@ -218,10 +222,10 @@ export default function LeaderboardPage() {
                               </View>
                             </View>
                             <View className="flex flex-1 flex-col">
-                              <Text className="text-sm font-medium">
+                              <Text className="font-[nunito] text-sm font-medium">
                                 {user?.nickname}
                               </Text>
-                              <Text className="text-xs font-normal">
+                              <Text className="font-[nunito] text-xs font-normal">
                                 {user.xpCount.toLocaleString("en-US")} Xp
                               </Text>
                             </View>
@@ -235,8 +239,10 @@ export default function LeaderboardPage() {
                   {/* Other ranks */}
                   <View className="flex w-full flex-1 flex-col gap-4 px-[20px] py-5 pb-24">
                     <View className="flex flex-row items-center justify-between">
-                      <Text className="text-lg">Users</Text>
-                      <Text className="text-lg font-normal">Global Rank</Text>
+                      <Text className="font-[nunito] text-lg">Users</Text>
+                      <Text className="font-[nunito] text-lg font-normal">
+                        Global Rank
+                      </Text>
                     </View>
 
                     <FlashList
@@ -251,22 +257,24 @@ export default function LeaderboardPage() {
                               />
                             </View>
                             <View className="flex flex-col items-start justify-center gap-2">
-                              <Text>
+                              <Text className="font-[nunito]">
                                 {item ? item?.nickname : "Loading..."}
                               </Text>
                               <View className="h-6 w-6 items-center justify-center rounded-lg bg-[#EBEBEB]">
-                                <Text>{index + 4}</Text>
+                                <Text className="font-[nunito]">
+                                  {index + 4}
+                                </Text>
                               </View>
                             </View>
                           </View>
 
                           <View className="flex flex-col items-end justify-center gap-2">
-                            <Text className="font-normal text-black">
+                            <Text className="font-[nunito] font-normal text-black">
                               {(item ? item.referralCount : 0).toLocaleString(
                                 "en-US",
                               )}
                             </Text>
-                            <Text className="font-normal text-black/60">
+                            <Text className="font-[nunito] font-normal text-black/60">
                               {(item ? item.xpCount : 0).toLocaleString(
                                 "en-US",
                               )}{" "}

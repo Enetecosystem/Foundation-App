@@ -68,14 +68,14 @@ export default function OTPPage() {
                 source={require("../../../assets/otp.png")}
                 style={{ width: 74, height: 74, alignItems: "center" }}
               />
-              <Text className="text-center text-2xl font-medium tracking-normal">
+              <Text className="text-center font-[nunito] text-2xl font-medium tracking-normal">
                 We’ve sent a 6-digit OTP to{"\n"}
                 {params?.email}
               </Text>
             </View>
 
             <View className="flex h-auto w-full flex-col items-start justify-center gap-4 rounded-b-[35px] px-[24px] py-10">
-              <Text className="px-2">Input code</Text>
+              <Text className="px-2 font-[nunito]">Input code</Text>
 
               <CodeField
                 ref={ref}
@@ -91,7 +91,7 @@ export default function OTPPage() {
                   <Text
                     key={index}
                     style={[styles.cell, isFocused && styles.focusCell]}
-                    className="mx-1 h-14 w-14 rounded-xl border border-slate-400 bg-[#EBEBEB] text-center text-2xl leading-[50px] active:border-black"
+                    className="mx-1 h-14 w-14 rounded-xl border border-slate-400 bg-[#EBEBEB] text-center font-[nunito] text-2xl leading-[50px] active:border-black"
                     onLayout={getCellOnLayoutHandler(index)}
                   >
                     {symbol || (isFocused ? <Cursor /> : null)}
@@ -125,7 +125,7 @@ export default function OTPPage() {
                     return Alert.alert("Onboarding error", "Invalid OTP code");
                   }
                 }}
-                className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center text-lg font-normal text-white transition-colors"
+                className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center font-[nunito] text-lg font-normal text-white transition-colors"
               >
                 Continue
                 {/* <Text className=""></Text> */}
@@ -146,7 +146,7 @@ export default function OTPPage() {
                     "OTP has been sent to the provided email address, check and re-input",
                   );
                 }}
-                className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-transparent p-4 text-center text-lg font-normal text-black transition-colors"
+                className="flex w-full items-center justify-center overflow-hidden rounded-lg bg-transparent p-4 text-center font-[nunito] text-lg font-normal text-black transition-colors"
               >
                 Resend OTP
                 {/* <Text className=""></Text> */}
@@ -162,7 +162,13 @@ export default function OTPPage() {
 const styles = StyleSheet.create({
   root: { flex: 1, padding: 0 },
   title: { textAlign: "center", fontSize: 30 },
-  codeFieldRoot: { marginTop: 5 },
+  codeFieldRoot: {
+    marginTop: 5,
+    width: "100%",
+    marginHorizontal: "auto",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+  },
   cell: {
     // width: 40,
     // height: 40,

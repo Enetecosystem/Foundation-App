@@ -42,9 +42,7 @@ export default function ReferralPage() {
 
   return (
     <SafeAreaView className="bg-background">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "android" ? "height" : "padding"}
-      >
+      <KeyboardAvoidingView behavior={"position"}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView className="min-h-screen w-full bg-[#F5F5F5]">
             <Stack.Screen
@@ -54,12 +52,12 @@ export default function ReferralPage() {
               }}
             />
 
-            <View className="flex w-full h-full flex-1 flex-col py-4">
+            <View className="flex h-full w-full flex-1 flex-col py-4">
               <View className="flex w-full flex-col px-[20px]">
-                <Text className="text-3xl font-medium">
+                <Text className="font-[nunito] text-3xl font-medium">
                   Refer your friends and share up to 1000XPs on each referrals
                 </Text>
-                <Text className="text-xl font-normal">
+                <Text className="font-[nunito] text-xl font-normal">
                   Your friends get 500 Xp when they signup with your referral
                   code
                 </Text>
@@ -75,14 +73,16 @@ export default function ReferralPage() {
                   className="flex w-36 flex-row items-center justify-center gap-2 rounded-lg bg-black py-2"
                 >
                   <SimpleLineIcons name="share-alt" size={18} color="white" />
-                  <Text className="text-lg text-white">Share link</Text>
+                  <Text className="font-[nunito] text-lg text-white">
+                    Share link
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View className="my-4" />
               <View className="flex w-full flex-1 flex-col gap-4 rounded-t-3xl bg-white px-[20px] py-5 pb-24">
                 <View className="flex flex-row items-center justify-between">
-                  <Text className="text-lg">Referrals</Text>
-                  <Text className="text-lg font-normal">
+                  <Text className="font-[nunito] text-lg">Referrals</Text>
+                  <Text className="font-[nunito] text-lg font-normal">
                     {(userDetail?.referralCount ?? 0).toLocaleString("en-US")}
                   </Text>
                 </View>
@@ -92,11 +92,13 @@ export default function ReferralPage() {
                   renderItem={({ item, index }) => (
                     <View className="my-2 flex flex-row items-center justify-between rounded-lg bg-[#EBEBEB] p-4">
                       <View className="flex flex-row items-center justify-center gap-2">
-                        <Text>{index + 1}.</Text>
-                        <Text>{item?.message}</Text>
+                        <Text className="font-[nunito]">{index + 1}.</Text>
+                        <Text className="font-[nunito]">{item?.message}</Text>
                       </View>
 
-                      <Text className="font-medium">+{item?.extra} XP</Text>
+                      <Text className="font-[nunito] font-medium">
+                        +{item?.extra} XP
+                      </Text>
                     </View>
                   )}
                   estimatedItemSize={

@@ -40,7 +40,7 @@ export default function DashboardHeader({
   return (
     <View
       className="flex w-full flex-row items-center justify-between px-4 py-4"
-      style={{ marginTop: top }}
+      style={{ marginTop: top + 10 }}
     >
       <View className="flex w-full flex-row items-center justify-between gap-5">
         <UserAvatar
@@ -74,7 +74,7 @@ export default function DashboardHeader({
                   }}
                 >
                   <MaterialIcons name="chat" size={20} color="black" />
-                  <Text className="text-lg font-normal text-black">
+                  <Text className="font-[nunito] text-lg font-normal text-black">
                     History
                   </Text>
                 </Pressable>
@@ -86,19 +86,22 @@ export default function DashboardHeader({
                   }}
                 >
                   <SimpleLineIcons name="globe" size={20} color="black" />
-                  <Text className="text-lg font-normal text-black">
+                  <Text className="font-[nunito] text-lg font-normal text-black">
                     Leaderboard
                   </Text>
                 </Pressable>
                 <Pressable
                   className="my-2 flex w-full flex-row items-center justify-start gap-4"
                   onPress={() => {
-                    router.push("/(main)/earn");
+                    // router.push("/(main)/earn");
+                    Alert.alert("X-Earn feature comming soon...");
                     setModalVisible(false);
                   }}
                 >
                   <FontAwesome6 name="x-twitter" size={20} color="black" />
-                  <Text className="text-lg font-normal text-black">X-Earn</Text>
+                  <Text className="font-[nunito] text-lg font-normal text-black">
+                    X-Earn
+                  </Text>
                 </Pressable>
                 <Pressable
                   className="my-2 flex w-full flex-row items-center justify-start gap-4"
@@ -109,7 +112,9 @@ export default function DashboardHeader({
                   }}
                 >
                   <FontAwesome6 name="x-twitter" size={20} color="black" />
-                  <Text className="text-lg font-normal text-black">Spaces</Text>
+                  <Text className="font-[nunito] text-lg font-normal text-black">
+                    Spaces
+                  </Text>
                 </Pressable>
                 <Pressable
                   className="my-2 flex w-full flex-row items-center justify-start gap-4"
@@ -134,7 +139,9 @@ export default function DashboardHeader({
                   }}
                 >
                   <AntDesign name="logout" size={20} color="black" />
-                  <Text className="text-lg font-normal text-black">Logout</Text>
+                  <Text className="font-[nunito] text-lg font-normal text-black">
+                    Logout
+                  </Text>
                 </Pressable>
                 <Pressable
                   className="my-2 flex w-full flex-row items-center justify-start gap-4"
@@ -170,7 +177,7 @@ export default function DashboardHeader({
                     size={24}
                     color="#FF4747"
                   />
-                  <Text className="text-lg font-normal text-[#FF4747]">
+                  <Text className="font-[nunito] text-lg font-normal text-[#FF4747]">
                     Delete Account
                   </Text>
                 </Pressable>
@@ -184,7 +191,7 @@ export default function DashboardHeader({
                   }}
                   className="w-full items-center justify-center rounded-lg border border-black bg-transparent p-2"
                 >
-                  <Text>Connect Wallet</Text>
+                  <Text className="font-[nunito]">Connect Wallet</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -210,7 +217,7 @@ const UserAvatar: FC<IUserAvatarProps> = ({ source, alt, nickname }) => (
       />
     </View>
 
-    <Text className="font-medium">{nickname}</Text>
+    <Text className="font-[nunito] font-medium">{nickname}</Text>
   </View>
 );
 
