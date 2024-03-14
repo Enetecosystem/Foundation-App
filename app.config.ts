@@ -3,10 +3,9 @@ import type { ConfigContext, ExpoConfig } from "@expo/config";
 import { ClientEnv, Env } from "./env";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
-  // "expo": {
   ...config,
   name: "Enet miner",
-  slug: "enet_miner",
+  slug: "enet-miner",
   scheme: "acme",
   userInterfaceStyle: "automatic",
   orientation: "portrait",
@@ -26,7 +25,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         origin: "https://n",
       },
-    ]
+    ],
+    [
+      "expo-updates",
+      {
+        username: "fullsnack_mimi",
+      },
+    ],
   ],
   extra: {
     ...ClientEnv,
@@ -41,12 +46,20 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: "com.enetminer.enet",
     adaptiveIcon: {
-      foregroundImage: "./assets/icon.png"
-    }
+      foregroundImage: "./assets/icon.png",
+    },
   },
   ios: {
     bundleIdentifier: Env.BUNDLE_ID,
     supportsTablet: false,
   },
-  // }
+  updates: {
+    url: "https://u.expo.dev/8852539f-a61b-4ce3-90d9-52c939c8f2c3",
+    requestHeaders: {
+      "expo-channel-name": "preview",
+    },
+  },
+  runtimeVersion: {
+    policy: "appVersion",
+  },
 });
