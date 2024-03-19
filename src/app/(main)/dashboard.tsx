@@ -258,7 +258,7 @@ export default function DashboardPage() {
                   onPress={() =>
                     router.push({ pathname: "/(main)/referral", params })
                   }
-                  className="flex w-full flex-row items-start justify-center gap-2 rounded-xl border border-dashed border-[#B3B2B2]/50 bg-[#EBEBEB] p-4"
+                  className="flex w-full flex-row items-start justify-start gap-3 rounded-xl border border-dashed border-[#B3B2B2]/50 bg-[#EBEBEB] p-4"
                 >
                   <Image
                     source={require("../../../assets/main/invite.png")}
