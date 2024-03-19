@@ -9,13 +9,26 @@ import {
   TextInput,
   ScrollView,
   Alert,
+  Button,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAction } from "convex/react";
 import { api } from "@/convex/generated/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getData, storeData } from "@/storageUtils";
 import { FontAwesome6 } from "@expo/vector-icons";
+import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
+import * as WebBrowser from "expo-web-browser";
+import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
+
+WebBrowser.maybeCompleteAuthSession();
+const discovery = {
+  authorizationEndpoint: "https://twitter.com/i/oauth2/authorize",
+  tokenEndpoint: "https://twitter.com/i/oauth2/token",
+  revocationEndpoint: "https://twitter.com/i/oauth2/revoke",
+};
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -25,6 +38,47 @@ export default function Register() {
 
   const initiateUser = useAction(api.onboarding.initializeNewUser);
   const loginUser = useAction(api.onboarding.loginUser);
+
+  const redirectUri = makeRedirectUri({
+    scheme: "com.enetminer.enet",
+    path: "redirect",
+    isTripleSlashed: false,
+  });
+
+  // Twitter auth test
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId: "alEyUDg0M3J2SWpXVXNCWXdwZEw6MTpjaQ",
+      redirectUri,
+      usePKCE: true,
+      scopes: [
+        "tweet.read",
+        "tweet.write",
+        "users.read",
+        "like.write",
+        "list.read",
+        "follows.write",
+        "follows.read",
+        "list.read",
+        "offline.access",
+      ],
+    },
+    discovery,
+  );
+
+  useEffect(() => {
+    console.log(request, redirectUri);
+    if (response && response?.type === "success") {
+      const { code } = response.params;
+      console.log(code, ":::Auth response code");
+    } else {
+      console.log(response, ":::Response from auth attempt");
+    }
+  }, [response]);
+
+  // Bottom sheet setup
+  const termsSheetRef = useRef<BottomSheetMethods>(null);
+  const privacySheetRef = useRef<BottomSheetMethods>(null);
 
   useEffect(() => {
     getUserLocalData();
@@ -188,11 +242,17 @@ export default function Register() {
                 <Link
                   suppressHighlighting
                   href="/#"
+                  disabled={!request}
                   className="flex w-16 max-w-16 items-center justify-center overflow-hidden rounded-lg bg-black p-4 text-center font-[nunito] text-lg font-normal text-white transition-colors"
-                  onPress={(e) => {
+                  onPress={async (e) => {
                     e.preventDefault();
 
                     console.log("Twitter button");
+
+                    const result = await promptAsync({
+                      dismissButtonStyle: "close",
+                    });
+                    console.log(result, "::: Twitter auth returned resutl");
                   }}
                 >
                   <FontAwesome6 name="x-twitter" size={20} color="white" />
@@ -205,6 +265,11 @@ export default function Register() {
                   // suppressHighlighting
                   className="text-[#15BDCF]"
                   href="/#"
+                  onPress={async (e) => {
+                    // Call bottom sheet slider to display terms
+
+                    termsSheetRef.current.open();
+                  }}
                 >
                   terms of service
                 </Link>{" "}
@@ -213,6 +278,9 @@ export default function Register() {
                   // suppressHighlighting
                   className="text-[#15BDCF]"
                   href="/#"
+                  onPress={async () => {
+                    privacySheetRef.current.open();
+                  }}
                 >
                   privacy policy
                 </Link>
@@ -222,6 +290,28 @@ export default function Register() {
           </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+      <BottomSheet ref={termsSheetRef}>
+        <View className="flex w-full flex-col items-center justify-start p-4">
+          <View>
+            <Text>Terms of service</Text>
+            <Button
+              onPress={() => termsSheetRef.current.close()}
+              title="close"
+            />
+          </View>
+        </View>
+      </BottomSheet>
+      <BottomSheet ref={privacySheetRef}>
+        <View className="flex w-full flex-col items-center justify-start p-4">
+          <View>
+            <Text>Privacy policy</Text>
+            <Button
+              onPress={() => privacySheetRef.current.close()}
+              title="close"
+            />
+          </View>
+        </View>
+      </BottomSheet>
     </SafeAreaView>
   );
 }
