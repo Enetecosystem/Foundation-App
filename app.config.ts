@@ -6,7 +6,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "Enet miner",
   slug: "enet-miner",
-  scheme: "acme",
+  scheme: "com.enetminer.enet",
   userInterfaceStyle: "automatic",
   orientation: "portrait",
   icon: "./assets/icon.png",
