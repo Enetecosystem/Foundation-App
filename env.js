@@ -16,6 +16,8 @@ const client = z.object({
   APP_ENV: z.enum(["local", "staging", "production", "expo"]),
   CONVEX_URL: z.string().url(),
   CONVEX_DEPLOYMENT: z.string(),
+  LOCAL_STORE_ENC_KEY: z.string().min(12),
+  TWITTER_CLIENT_ID: z.string(),
 });
 
 const buildTime = z.object({
@@ -34,6 +36,8 @@ const _clientEnv = {
   // ADD YOUR ENV VARS HERE TOO
   CONVEX_DEPLOYMENT: process.env.CONVEX_DEPLOYMENT,
   CONVEX_URL: process.env.CONVEX_URL,
+  LOCAL_STORE_ENC_KEY: process.env.LOCAL_STORE_ENC_KEY,
+  TWITTER_CLIENT_ID: process.env.TWITTER_CLIENT_ID,
 };
 
 /**
