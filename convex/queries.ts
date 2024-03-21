@@ -133,3 +133,15 @@ export const getOnlyXpHistory = query({
     );
   },
 });
+
+export const getTasks = query({
+  handler: async ({ db }) => {
+    return await db.query("tasks").collect();
+  },
+});
+
+export const fetchEvents = query({
+  handler: async ({ db }) => {
+    return await db.query("events").collect();
+  },
+});
