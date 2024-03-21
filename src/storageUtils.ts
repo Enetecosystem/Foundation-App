@@ -1,6 +1,10 @@
 import { MMKV } from "react-native-mmkv";
+import { Env } from "@env";
 
-export const storage = new MMKV();
+export const storage = new MMKV({
+  id: "enet-miner-app",
+  encryptionKey: Env.LOCAL_STORE_ENC_KEY,
+});
 
 export const storeData = async (key: string, value: any): Promise<void> => {
   try {

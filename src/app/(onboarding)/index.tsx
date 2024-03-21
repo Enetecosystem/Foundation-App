@@ -19,7 +19,15 @@ import { getData, storeData } from "@/storageUtils";
 import { FontAwesome6 } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 import * as WebBrowser from "expo-web-browser";
-import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
+import {
+  makeRedirectUri,
+  useAuthRequest,
+  exchangeCodeAsync,
+  fetchUserInfoAsync,
+  TokenResponse,
+  refreshAsync,
+} from "expo-auth-session";
+import { Env } from "@/env";
 
 WebBrowser.maybeCompleteAuthSession();
 const discovery = {
@@ -28,27 +36,28 @@ const discovery = {
   revocationEndpoint: "https://twitter.com/i/oauth2/revoke",
 };
 
-WebBrowser.maybeCompleteAuthSession();
-
 export default function Register() {
   const [email, setEmail] = useState("");
   const [referreeCode, setReferreeCode] = useState("");
   const [password, setPassword] = useState("");
   const [userIsOnboarded, setUserIsOnbaorded] = useState(false);
 
+  // Code after return from twitter auth
+  const [authCode, setAuthCode] = useState<string>();
+
   const initiateUser = useAction(api.onboarding.initializeNewUser);
   const loginUser = useAction(api.onboarding.loginUser);
 
   const redirectUri = makeRedirectUri({
     scheme: "com.enetminer.enet",
-    path: "redirect",
-    isTripleSlashed: false,
+    // path: "redirect",
+    isTripleSlashed: true,
   });
 
   // Twitter auth test
   const [request, response, promptAsync] = useAuthRequest(
     {
-      clientId: "alEyUDg0M3J2SWpXVXNCWXdwZEw6MTpjaQ",
+      clientId: Env.TWITTER_CLIENT_ID,
       redirectUri,
       usePKCE: true,
       scopes: [
@@ -70,16 +79,45 @@ export default function Register() {
     console.log(request, redirectUri);
     if (response && response?.type === "success") {
       const { code } = response.params;
+      setAuthCode(code);
       console.log(code, ":::Auth response code");
     } else {
       console.log(response, ":::Response from auth attempt");
     }
   }, [response]);
 
+  // Handle access_token exchange after twitter auth
+  useEffect(() => {
+    if (authCode && !!authCode.length) {
+      exchangeCodeForToken();
+    }
+
+    async function exchangeCodeForToken() {
+      const tokenResponse: TokenResponse = await exchangeCodeAsync(
+        { code: authCode, redirectUri, clientId: Env.TWITTER_CLIENT_ID },
+        discovery,
+      );
+
+      console.log(tokenResponse, ":::Token response after redirect");
+
+      // Store the returned data
+      await storeData("@enet-store/isOnboarded", true);
+      await storeData("@enet0-store/token", {
+        access: tokenResponse.accessToken,
+        refresh: tokenResponse.refreshToken,
+      });
+
+      // Get basic user info before proceeding
+      // const userInfo = await fetchUserInfoAsync(tokenResponse, discovery);
+      // Call the
+    }
+  }, [authCode]);
+
   // Bottom sheet setup
   const termsSheetRef = useRef<BottomSheetMethods>(null);
   const privacySheetRef = useRef<BottomSheetMethods>(null);
 
+  // Handle user return after onboarding into the applicaiton
   useEffect(() => {
     getUserLocalData();
     async function getUserLocalData() {
@@ -91,6 +129,23 @@ export default function Register() {
           return;
         } else {
           setUserIsOnbaorded(true);
+          // Refresh token
+          const token = (await getData("@enet-store/token", true)) as Record<
+            string,
+            any
+          >;
+          if (!token) {
+            return;
+          } else {
+            // If token object is available then refresh the token and fetch new user details
+            const newToken = await refreshAsync(
+              { refreshToken: token?.refresh, clientId: Env.TWITTER_CLIENT_ID },
+              discovery,
+            );
+            console.log(newToken);
+
+            // Pass it to tweep fetch user badic details and redirect to dashboard
+          }
         }
       } catch (e: any) {
         return Alert.alert("Onboarding error", e.message ?? e.toString());
@@ -249,10 +304,9 @@ export default function Register() {
 
                     console.log("Twitter button");
 
-                    const result = await promptAsync({
+                    await promptAsync({
                       dismissButtonStyle: "close",
                     });
-                    console.log(result, "::: Twitter auth returned resutl");
                   }}
                 >
                   <FontAwesome6 name="x-twitter" size={20} color="white" />
