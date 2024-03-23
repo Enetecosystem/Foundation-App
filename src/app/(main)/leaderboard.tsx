@@ -35,7 +35,11 @@ export default function LeaderboardPage() {
   console.log(params, ":::Params for the leaderboard q.lifeee@gmail.com");
 
   return (
-    <SafeAreaView className="bg-background">
+    <SafeAreaView
+      className="bg-background"
+      edges={["right", "bottom", "left"]}
+      style={{ flex: 1, backgroundColor: "yellow" }}
+    >
       <KeyboardAvoidingView behavior={"position"}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View
@@ -43,7 +47,7 @@ export default function LeaderboardPage() {
             className="relative h-screen min-h-screen w-full"
           >
             <View
-              style={{ height: 80, top: height - 180 }}
+              style={{ height: 100, bottom: 100 - Math.max(bottom, 17) }}
               className="absolute left-0 right-0 z-50 mx-3 flex flex-row items-center justify-between gap-2 rounded-md bg-[#ABABAB] px-6"
             >
               <View className="h-12 w-12 items-center justify-center rounded-full bg-black">

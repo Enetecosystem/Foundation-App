@@ -2,36 +2,51 @@ import ClaimModal from "@/components/claim_modal";
 import DashboardHeader from "@/components/dashboard_header";
 import { Overview } from "@/components/overview_card";
 import { StatsCard } from "@/components/stats_card";
-import TaskBoostCard from "@/components/task_boost_card";
+import TaskBoostCard, {
+  TaskRenderer,
+  icons,
+} from "@/components/task_boost_card";
 import { api } from "@/convex/generated/api";
-import { Id } from "@/convex/generated/dataModel";
-import { Octicons } from "@expo/vector-icons";
+import { Doc, Id } from "@/convex/generated/dataModel";
+import { AntDesign, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { useAction, useMutation, useQuery } from "convex/react";
 import { format } from "date-fns";
 import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
-  SafeAreaView,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   // Modal,
   View,
   ScrollView,
-  useWindowDimensions,
+  // useWindowDimensions,
   Alert,
   Dimensions,
+  Button,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  useSafeAreaInsets,
+  SafeAreaView,
+  useSafeAreaFrame,
+} from "react-native-safe-area-context";
+import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
+import { WebView } from "react-native-webview";
+
+export type EventType = Partial<Doc<"events">> & {
+  company: Partial<Doc<"company">> & { logoUrl: string };
+};
+type Network = "twitter" | "discord" | "telegram" | "website";
+type ActionType = "follow" | "post" | "join" | "visit";
 
 export default function DashboardPage() {
   const params = useLocalSearchParams();
-  const { top } = useSafeAreaInsets();
-  const { height } = useWindowDimensions();
+  const { top, bottom } = useSafeAreaInsets();
+  const { height } = useSafeAreaFrame();
   const [modalVisible, setModalVisible] = useState(false);
 
   // Fetch users data
@@ -39,9 +54,19 @@ export default function DashboardPage() {
     userId: params?.userId as Id<"user">,
   });
   const [claimModalVisible, setClaimModalVisible] = useState(false);
+  const [eventSheetContent, setEventSheetContent] = useState<
+    EventType | undefined
+  >();
+  const [taskSheetContent, setTaskSheetContent] = useState<
+    Doc<"tasks"> | undefined
+  >();
 
   const claimReward = useMutation(api.mutations.claimRewards);
   const triggerMiner = useAction(api.mutations.triggerMining);
+
+  // Get tasks and events
+  const fetchTasks = useQuery(api.queries.fetchTasks);
+  const fetchEvents = useQuery(api.queries.fetchEvents);
 
   useEffect(() => {
     if (!userDetail?.mineActive && userDetail?.redeemableCount > 0) {
@@ -49,8 +74,18 @@ export default function DashboardPage() {
     }
   }, [userDetail?.mineActive, userDetail?.redeemableCount]);
 
+  // EVent bottom sheet
+  const eventSheetRef = useRef<BottomSheetMethods>(null);
+  const taskSheetRef = useRef<BottomSheetMethods>(null);
+
+  // console.log(bottom, top, ":::Bottom Top, size", height, height - top);
+
   return (
-    <SafeAreaView className="bg-background">
+    <SafeAreaView
+      className="bg-background"
+      edges={["right", "bottom", "left"]}
+      style={{ flex: 1, backgroundColor: "yellow" }}
+    >
       <KeyboardAvoidingView behavior={"position"}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View
@@ -61,7 +96,7 @@ export default function DashboardPage() {
               // style={{ bottom: bottom + 92 }}
               style={{
                 height: 100,
-                top: height - 202,
+                bottom: 100 - Math.max(bottom, 17),
               }}
               className="absolute left-0 right-0 z-50 flex w-full flex-col items-center justify-center gap-3 bg-white"
             >
@@ -229,7 +264,7 @@ export default function DashboardPage() {
 
               <TouchableOpacity
                 activeOpacity={1}
-                className="flex h-full w-full flex-col px-[20px] py-4 pb-32"
+                className="flex h-full w-full flex-col px-[20px] py-6 pb-32"
               >
                 <StatsCard
                   minedCount={userDetail?.minedCount ?? 0}
@@ -277,13 +312,163 @@ export default function DashboardPage() {
                 <View className="my-6" />
                 {/* Task and boosts */}
                 <View className="mt-6 w-full flex-1">
-                  <TaskBoostCard />
+                  <TaskBoostCard
+                    // eventSheetRef={eventSheetRef}
+                    onEventPressed={(eventIndex: number) => {
+                      console.log(eventIndex, ":::events index");
+                      setEventSheetContent(fetchEvents[eventIndex]);
+                      eventSheetRef.current.open();
+                    }}
+                    onTaskPressed={(taskIndex: number) => {
+                      console.log(taskIndex, ":::task Index");
+                      setTaskSheetContent(fetchTasks[taskIndex]);
+                      taskSheetRef.current.open();
+                    }}
+                    tasks={fetchTasks}
+                    events={fetchEvents}
+                  />
                 </View>
               </TouchableOpacity>
             </ScrollView>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+      <BottomSheet ref={eventSheetRef} height="70%">
+        <View className="flex h-full w-full flex-col items-center justify-between gap-4 rounded-lg p-4">
+          {/* <Text>{eventSheetContent && eventSheetContent.title}</Text> */}
+          <View className="flex w-full flex-row items-center justify-center gap-4">
+            <View className="rounded-lg bg-gray-700/30 p-2">
+              <Image
+                source={{ uri: eventSheetContent?.company?.logoUrl }}
+                style={{ width: 50, height: 50 }}
+                resizeMode="cover"
+              />
+            </View>
+            <View className="flex flex-col items-start justify-center gap-2">
+              <Text className="font-[nunito] text-lg font-bold text-black">
+                {eventSheetContent?.title}
+              </Text>
+              <Text className=" font-[nunito]">
+                +{eventSheetContent?.reward.toLocaleString("en-US")} XP
+              </Text>
+            </View>
+          </View>
+          <View className="w-full gap-4">
+            {eventSheetContent &&
+              eventSheetContent?.actions?.map((action, index) => (
+                <TouchableOpacity
+                  onPress={() => {
+                    // router.push({ pathname: task.link, params });
+                  }}
+                  key={index}
+                  className="flex w-full flex-row items-center justify-center gap-4"
+                >
+                  <View className="rounded-xl bg-[#EBEBEB] p-5">
+                    {icons[action?.channel]}
+                  </View>
+                  <View className="flex flex-col items-start justify-center gap-2">
+                    <Text className="font-[nunito] text-lg">
+                      {action?.name}
+                    </Text>
+                    {/* <Text className=" font-[nunito]">
+                  +{action?.reward.toLocaleString("en-US")} XP
+                </Text> */}
+                  </View>
+                  <View className="flex-1" />
+                  <MaterialIcons
+                    name="keyboard-arrow-right"
+                    size={24}
+                    color="black"
+                  />
+                </TouchableOpacity>
+              ))}
+          </View>
+          <View
+            className="w-full flex-1"
+            children={
+              <Button
+                onPress={() => eventSheetRef.current.close()}
+                title="Completed"
+                color="#000000"
+              />
+            }
+          />
+        </View>
+      </BottomSheet>
+      <BottomSheet
+        ref={taskSheetRef}
+        height="90%"
+        style={{ backgroundColor: "white", zIndex: 50 }}
+      >
+        <TaskRenderer
+          task={taskSheetContent}
+          onCloseEvent={() => taskSheetRef.current.close()}
+          renderView={({ task }) => {
+            // console.log(taskSheetRef, ":::Ref");
+            return (
+              <View className="flex h-full w-full flex-col gap-4">
+                <View className="flex w-full flex-1 gap-4 overflow-hidden">
+                  <WebView
+                    originWhitelist={["*"]}
+                    className="h-full w-full"
+                    source={{ uri: task?.action?.link }}
+                  />
+                </View>
+                <View className="flex flex-col gap-2">
+                  <Text className="font-[nunito] text-xl font-bold">
+                    Instructions
+                  </Text>
+                  <Text className="font-[nunito] text-lg font-medium">
+                    Press the LIKE & REPOST button to automatically LIKE &
+                    REPOST without redirecting you.
+                  </Text>
+                  <Text className="font-[nunito] text-lg font-medium">
+                    Press the Proceed button to verify{" "}
+                  </Text>
+                </View>
+                <View className="flex w-full flex-col gap-3">
+                  <View className="flex w-full flex-row gap-3">
+                    <View
+                      className="flex-1"
+                      children={
+                        <Button
+                          onPress={() => {
+                            // Mark
+                            // Alert.alert("Liking post....");
+                          }}
+                          title="Like"
+                          color="#000000"
+                        />
+                      }
+                    />
+
+                    <View
+                      className="flex-1"
+                      children={
+                        <Button
+                          onPress={() => {
+                            // Mark
+                          }}
+                          title="Repost"
+                          color="#000000"
+                        />
+                      }
+                    />
+                  </View>
+                  <Button
+                    onPress={() => {
+                      // Mark
+                      taskSheetRef.current.close();
+                    }}
+                    title="Proceed"
+                    color="#000000"
+                  />
+                </View>
+              </View>
+            );
+          }}
+        />
+      </BottomSheet>
     </SafeAreaView>
   );
 }
