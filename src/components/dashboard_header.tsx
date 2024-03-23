@@ -40,7 +40,7 @@ export default function DashboardHeader({
   return (
     <View
       className="flex w-full flex-row items-center justify-between px-4 py-4"
-      style={{ marginTop: top + 10 }}
+      style={{ marginTop: top, height: 60 }}
     >
       <View className="flex w-full flex-row items-center justify-between gap-5">
         <UserAvatar
@@ -49,7 +49,7 @@ export default function DashboardHeader({
           nickname={nickname ?? "Johcee"}
         />
         <TouchableOpacity className="p-2" onPress={() => setModalVisible(true)}>
-          <Ionicons name="grid-outline" size={24} color="#D9D8D8" />
+          <Ionicons name="grid-outline" size={18} color="#D9D8D8" />
         </TouchableOpacity>
         <Modal
           animationType="fade"

@@ -1,13 +1,15 @@
-import React, { useRef, useState } from "react";
+import React, { Suspense, useRef, useState } from "react";
 import {
   View,
   Text,
   useWindowDimensions,
   Touchable,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import {
+  AntDesign,
   Feather,
   FontAwesome5,
   FontAwesome6,
@@ -18,17 +20,30 @@ import { Link, router, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/generated/api";
-import { Id } from "@/convex/generated/dataModel";
+import { Doc, Id } from "@/convex/generated/dataModel";
+import { BottomSheetMethods } from "@devvie/bottom-sheet";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { EventType } from "@/app/(main)/dashboard";
 
 interface ITaskBoostCardProps {
-  renderTasks: () => React.ReactNode;
-  renderBoosts: () => React.ReactNode;
-  data: Array<Record<string, any>>;
+  renderTasks?: () => React.ReactNode;
+  renderBoosts?: () => React.ReactNode;
+  data?: Array<Record<string, any>>;
+  // eventSheetRef: React.MutableRefObject<BottomSheetMethods>;
+  events: EventType[] | undefined;
+  tasks: Doc<"tasks">[] | undefined;
+  onEventPressed: (eventIndex: number) => void;
+  onTaskPressed: (eventIndex: number) => void;
 }
-export default function TaskBoostCard() {
+export default function TaskBoostCard({
+  tasks,
+  events,
+  onEventPressed,
+  onTaskPressed,
+}: ITaskBoostCardProps) {
   const { userId, ...params } = useLocalSearchParams();
   const sliderRef = useRef(null);
-  const { width } = useWindowDimensions();
+  const { width, height } = useSafeAreaFrame();
   const [sliderIndex, setSliderIndex] = useState(0);
 
   const speedBoost = useMutation(api.mutations.speedBoost);
@@ -54,13 +69,13 @@ export default function TaskBoostCard() {
   ];
 
   return (
-    <View className="mb-32 flex w-full flex-col gap-4">
+    <View className="mb-32 flex w-full flex-col gap-2">
       <View className="flex w-full flex-row rounded-md bg-white p-2">
         <TouchableOpacity
           style={{
             backgroundColor: sliderIndex === 0 ? "black" : "transparent",
           }}
-          className="flex w-1/3 flex-row items-center justify-center gap-2 rounded-xl p-4 transition-colors"
+          className="flex w-1/3 flex-row items-center justify-center gap-2 rounded-xl p-3 transition-colors"
           onPress={() => {
             sliderRef.current.scrollTo({ index: 0, animated: true });
             setSliderIndex(0);
@@ -68,7 +83,7 @@ export default function TaskBoostCard() {
         >
           <Octicons
             name="database"
-            size={20}
+            size={16}
             color={sliderIndex === 0 ? "white" : "black"}
           />
           <Text
@@ -84,7 +99,7 @@ export default function TaskBoostCard() {
           style={{
             backgroundColor: sliderIndex === 1 ? "black" : "transparent",
           }}
-          className="flex w-1/3 flex-row items-center justify-center gap-2 rounded-xl p-4 transition-colors"
+          className="flex w-1/3 flex-row items-center justify-center gap-2 rounded-xl p-3 transition-colors"
           onPress={() => {
             sliderRef.current.scrollTo({ index: 1, animated: true });
             setSliderIndex(1);
@@ -92,7 +107,7 @@ export default function TaskBoostCard() {
         >
           <MaterialIcons
             name="double-arrow"
-            size={20}
+            size={16}
             color={sliderIndex === 1 ? "white" : "black"}
           />
           <Text
@@ -108,7 +123,7 @@ export default function TaskBoostCard() {
           style={{
             backgroundColor: sliderIndex === 2 ? "black" : "transparent",
           }}
-          className="flex w-1/3 flex-row items-center justify-center gap-2 rounded-xl p-4 transition-colors"
+          className="flex w-1/3 flex-row items-center justify-center gap-2 rounded-xl p-3 transition-colors"
           onPress={() => {
             sliderRef.current.scrollTo({ index: 2, animated: true });
             setSliderIndex(2);
@@ -116,7 +131,7 @@ export default function TaskBoostCard() {
         >
           <Feather
             name="zap"
-            size={20}
+            size={16}
             color={sliderIndex === 2 ? "white" : "black"}
           />
           <Text
@@ -142,7 +157,7 @@ export default function TaskBoostCard() {
         }}
         autoPlay={false}
         width={width * 0.95}
-        height={width * 1.2}
+        height={height * 0.6}
         pagingEnabled
         enabled={false}
         scrollAnimationDuration={700}
@@ -156,13 +171,22 @@ export default function TaskBoostCard() {
             return (
               <Tasks
                 key={index}
+                tasks={tasks}
                 params={{ userId: userId as string, ...params }}
+                onTaskPressed={onTaskPressed}
               />
             );
           }
 
           if (index === 1) {
-            return <Events key={index} params={params} />;
+            return (
+              <Events
+                key={index}
+                events={events}
+                params={{ userId: userId as string, ...params }}
+                onEventPressed={onEventPressed}
+              />
+            );
           }
 
           return <Boosts key={index} boosterList={[]} />;
@@ -172,6 +196,12 @@ export default function TaskBoostCard() {
   );
 }
 
+export const icons = {
+  twitter: <FontAwesome6 name="x-twitter" size={24} color="black" />,
+  discord: <MaterialIcons name="discord" size={24} color="black" />,
+  telegram: <FontAwesome5 name="telegram-plane" size={24} color="black" />,
+  invite: <FontAwesome5 name="user-friends" size={24} color="black" />,
+};
 const ccosystemTaskList = [
   {
     name: "Invite 10 Friends",
@@ -212,11 +242,13 @@ interface ITaskProps {
     accessToken?: string;
     refreshToken?: string;
   };
+  tasks: Doc<"tasks">[] | undefined;
+  onTaskPressed: (index: number) => void;
 }
-const Tasks: React.FC<ITaskProps> = ({ params }) => {
+const Tasks: React.FC<ITaskProps> = ({ params, tasks, onTaskPressed }) => {
   // Fetch tasks and events
-  const fetchTasks = useQuery(api.queries.fetchTasks);
-  const fetchEvents = useQuery(api.queries.fetchEvents);
+
+  console.log(tasks, ":::Tasks and events");
 
   return (
     <View className="flex w-full flex-1 flex-col items-center justify-start gap-4 bg-white p-6 pb-14">
@@ -226,23 +258,34 @@ const Tasks: React.FC<ITaskProps> = ({ params }) => {
       {/* <Text className="font-[nunito] -mt-3 text-lg text-black/50">
       10,000 XP Challenge
     </Text> */}
-      {ccosystemTaskList.map((task, index) => (
-        <TouchableOpacity
-          onPress={() => router.push({ pathname: task.link, params })}
-          key={index}
-          className="flex w-full flex-row items-center justify-center gap-4"
-        >
-          <View className="rounded-xl bg-[#EBEBEB] p-5">{task?.icon}</View>
-          <View className="flex flex-col items-start justify-center gap-2">
-            <Text className="font-[nunito] text-lg">{task?.name}</Text>
-            <Text className=" font-[nunito]">
-              +{task?.reward.toLocaleString("en-US")} XP
-            </Text>
-          </View>
-          <View className="flex-1" />
-          <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-        </TouchableOpacity>
-      ))}
+      <Suspense fallback={<ActivityIndicator size="large" color="#000000" />}>
+        {tasks?.map((task, index) => (
+          <TouchableOpacity
+            onPress={() => {
+              // router.push({ pathname: task.link, params });
+              onTaskPressed(index);
+            }}
+            key={index}
+            className="flex w-full flex-row items-center justify-center gap-4"
+          >
+            <View className="rounded-xl bg-[#EBEBEB] p-5">
+              {icons[task?.action.channel]}
+            </View>
+            <View className="flex flex-col items-start justify-center gap-2">
+              <Text className="font-[nunito] text-lg">{task?.name}</Text>
+              <Text className=" font-[nunito]">
+                +{task?.reward.toLocaleString("en-US")} XP
+              </Text>
+            </View>
+            <View className="flex-1" />
+            <MaterialIcons
+              name="keyboard-arrow-right"
+              size={24}
+              color="black"
+            />
+          </TouchableOpacity>
+        ))}
+      </Suspense>
     </View>
   );
 };
@@ -279,36 +322,66 @@ const eventsList = [
     link: "https://discord.gg/RQqVWPxuwq",
   },
 ];
-const Events = ({ params }) => (
-  <View className="flex w-full flex-1 flex-col items-center justify-start gap-4 bg-white p-6 pb-14">
-    {/*    <Text className="text-2xl text-black">Ecosystem</Text>
+interface IEventProps {
+  params: {
+    userId: string;
+    email?: string;
+    nickname?: string;
+    accessToken?: string;
+    refreshToken?: string;
+  };
+  events: EventType[] | undefined;
+  onEventPressed: (index: number) => void;
+}
+const Events: React.FC<IEventProps> = ({ params, events, onEventPressed }) => {
+  return (
+    <View className="flex w-full flex-1 flex-col items-center justify-start gap-4 bg-white p-6 pb-14">
+      {/*    <Text className="text-2xl text-black">Ecosystem</Text>
     <Text className="-mt-3 text-lg text-black/50">10,000 XP Challenge</Text> */}
-    {!![].length &&
-      eventsList.map((task, index) => (
-        <TouchableOpacity
-          onPress={() => router.push({ pathname: task.link, params })}
-          key={index}
-          className="flex w-full flex-row items-center justify-center gap-4"
-        >
-          <View className="rounded-xl bg-[#EBEBEB] p-5">{task?.icon}</View>
-          <View className="flex flex-col items-start justify-center gap-2">
-            <Text className="font-[nunito] text-lg">{task?.name}</Text>
-            <Text className="font-[nunito]">
-              +{task?.reward.toLocaleString("en-US")} XP
-            </Text>
-          </View>
-          <View className="flex-1" />
-          <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-        </TouchableOpacity>
-      ))}
 
-    {![].length && (
-      <Text className="mt-5 text-center font-[nunito] text-xl font-medium text-black">
-        There are no events at this time, check back later
-      </Text>
-    )}
-  </View>
-);
+      <Suspense fallback={<ActivityIndicator size="large" color="#000000" />}>
+        {events &&
+          !!events?.length &&
+          events.map((event, index) => (
+            <TouchableOpacity
+              onPress={() => {
+                // router.push({ pathname: task.link, params })
+                onEventPressed(index);
+              }}
+              key={index}
+              className="flex w-full flex-row items-center justify-center gap-4"
+            >
+              <View className="rounded-2xl bg-gray-700/30 p-2">
+                <Image
+                  source={{ uri: event?.company?.logoUrl }}
+                  style={{ width: 50, height: 50 }}
+                  resizeMode="cover"
+                />
+              </View>
+              <View className="flex flex-col items-start justify-center gap-2">
+                <Text className="font-[nunito] text-lg">{event?.title}</Text>
+                <Text className="font-[nunito]">
+                  +{event?.reward.toLocaleString("en-US")} XP
+                </Text>
+              </View>
+              <View className="flex-1" />
+              <MaterialIcons
+                name="keyboard-arrow-right"
+                size={24}
+                color="black"
+              />
+            </TouchableOpacity>
+          ))}
+
+        {events && !events.length && (
+          <Text className="mt-5 text-center font-[nunito] text-xl font-medium text-black">
+            There are no events at this time, check back later
+          </Text>
+        )}
+      </Suspense>
+    </View>
+  );
+};
 
 const Boosts = ({ boosterList }: { boosterList: Array<any> }) => (
   <View className="flex w-full flex-1 flex-col items-center justify-start gap-4 bg-white p-6 pb-14">
@@ -368,3 +441,37 @@ const Boosts = ({ boosterList }: { boosterList: Array<any> }) => (
     )}
   </View>
 );
+
+interface ITaskRenderProps {
+  task: Doc<"tasks">;
+  onCloseEvent: () => void;
+  renderView: ({
+    task,
+    // ref,
+  }: {
+    task: Doc<"tasks">;
+    // ref: React.MutableRefObject<BottomSheetMethods>;
+  }) => React.ReactNode | JSX.Element;
+}
+export const TaskRenderer: React.FC<ITaskRenderProps> = ({
+  task,
+  onCloseEvent,
+  renderView,
+}) => {
+  return (
+    <View className="flex h-full w-full flex-col items-center justify-between rounded-lg p-4 pb-24">
+      <View className="flex w-full flex-row items-center justify-between">
+        <View />
+        <Text className="text-lg font-medium text-black">{task?.name}</Text>
+        <TouchableOpacity
+          onPress={() => {
+            onCloseEvent();
+          }}
+        >
+          <AntDesign name="close" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+      {renderView({ task })}
+    </View>
+  );
+};
