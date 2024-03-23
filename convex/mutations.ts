@@ -28,7 +28,7 @@ export const storeEmail = internalMutation({
       referralCount: 0,
       mineHours: 6,
       redeemableCount: 0,
-      xpCount: 0,
+      xpCount: 1000,
       speedBoost: {
         isActive: false,
         rate: 2,

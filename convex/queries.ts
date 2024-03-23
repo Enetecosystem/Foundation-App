@@ -134,14 +134,34 @@ export const getOnlyXpHistory = query({
   },
 });
 
-export const getTasks = query({
+export const fetchTasks = query({
   handler: async ({ db }) => {
     return await db.query("tasks").collect();
   },
 });
 
 export const fetchEvents = query({
-  handler: async ({ db }) => {
-    return await db.query("events").collect();
+  handler: async ({ db, storage }) => {
+    const events = await db.query("events").collect();
+
+    return await Promise.all(
+      events.map(async (event) => {
+        const company = await db.get(event.companyId);
+        // if(!company) {
+        //   throw new Error("No company found");
+        // }
+        const logoUrl = await storage.getUrl(
+          company?.logoStorageId as Id<"_storage">,
+        );
+
+        return {
+          ...event,
+          company: {
+            ...company,
+            logoUrl: logoUrl ?? "",
+          },
+        };
+      }),
+    );
   },
 });
