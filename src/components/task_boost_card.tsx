@@ -16,7 +16,7 @@ import {
 } from "@expo/vector-icons";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/generated/api";
 import { Id } from "@/convex/generated/dataModel";
 
@@ -26,7 +26,7 @@ interface ITaskBoostCardProps {
   data: Array<Record<string, any>>;
 }
 export default function TaskBoostCard() {
-  const params = useLocalSearchParams();
+  const { userId, ...params } = useLocalSearchParams();
   const sliderRef = useRef(null);
   const { width } = useWindowDimensions();
   const [sliderIndex, setSliderIndex] = useState(0);
@@ -40,7 +40,7 @@ export default function TaskBoostCard() {
       cost: 50,
       icon: <Feather name="zap" size={24} color="black" />,
       action: async () => {
-        await speedBoost({ userId: params?.userId as Id<"user"> });
+        await speedBoost({ userId: userId as Id<"user"> });
       },
     },
     {
@@ -48,7 +48,7 @@ export default function TaskBoostCard() {
       cost: 500,
       icon: <Octicons name="database" size={24} color="black" />,
       action: async () => {
-        await botBoost({ userId: params?.userId as Id<"user"> });
+        await botBoost({ userId: userId as Id<"user"> });
       },
     },
   ];
@@ -150,8 +150,15 @@ export default function TaskBoostCard() {
         onSnapToItem={(index) => {}}
         defaultIndex={0}
         renderItem={({ index, item }) => {
+          console.log(item, ":::Items of carousel");
+
           if (index === 0) {
-            return <Tasks key={index} params={params} />;
+            return (
+              <Tasks
+                key={index}
+                params={{ userId: userId as string, ...params }}
+              />
+            );
           }
 
           if (index === 1) {
@@ -197,33 +204,48 @@ const ccosystemTaskList = [
     link: "https://discord.gg/RQqVWPxuwq",
   },
 ];
-const Tasks = ({ params }) => (
-  <View className="flex w-full flex-1 flex-col items-center justify-start gap-4 bg-white p-6 pb-14">
-    <Text className="font-[nunito] text-xl text-black">
-      Simple task for more XP's
-    </Text>
-    {/* <Text className="font-[nunito] -mt-3 text-lg text-black/50">
+interface ITaskProps {
+  params: {
+    userId: string;
+    email?: string;
+    nickname?: string;
+    accessToken?: string;
+    refreshToken?: string;
+  };
+}
+const Tasks: React.FC<ITaskProps> = ({ params }) => {
+  // Fetch tasks and events
+  const fetchTasks = useQuery(api.queries.fetchTasks);
+  const fetchEvents = useQuery(api.queries.fetchEvents);
+
+  return (
+    <View className="flex w-full flex-1 flex-col items-center justify-start gap-4 bg-white p-6 pb-14">
+      <Text className="font-[nunito] text-xl text-black">
+        Simple task for more XP's
+      </Text>
+      {/* <Text className="font-[nunito] -mt-3 text-lg text-black/50">
       10,000 XP Challenge
     </Text> */}
-    {ccosystemTaskList.map((task, index) => (
-      <TouchableOpacity
-        onPress={() => router.push({ pathname: task.link, params })}
-        key={index}
-        className="flex w-full flex-row items-center justify-center gap-4"
-      >
-        <View className="rounded-xl bg-[#EBEBEB] p-5">{task?.icon}</View>
-        <View className="flex flex-col items-start justify-center gap-2">
-          <Text className="font-[nunito] text-lg">{task?.name}</Text>
-          <Text className=" font-[nunito]">
-            +{task?.reward.toLocaleString("en-US")} XP
-          </Text>
-        </View>
-        <View className="flex-1" />
-        <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-      </TouchableOpacity>
-    ))}
-  </View>
-);
+      {ccosystemTaskList.map((task, index) => (
+        <TouchableOpacity
+          onPress={() => router.push({ pathname: task.link, params })}
+          key={index}
+          className="flex w-full flex-row items-center justify-center gap-4"
+        >
+          <View className="rounded-xl bg-[#EBEBEB] p-5">{task?.icon}</View>
+          <View className="flex flex-col items-start justify-center gap-2">
+            <Text className="font-[nunito] text-lg">{task?.name}</Text>
+            <Text className=" font-[nunito]">
+              +{task?.reward.toLocaleString("en-US")} XP
+            </Text>
+          </View>
+          <View className="flex-1" />
+          <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+};
 
 const eventsList = [
   {
