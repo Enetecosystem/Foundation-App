@@ -17,7 +17,7 @@ import { api } from "@/convex/generated/api";
 import { useEffect, useState, useRef } from "react";
 import { getData, storeData } from "@/storageUtils";
 import { FontAwesome6 } from "@expo/vector-icons";
-import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
+// import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 import * as WebBrowser from "expo-web-browser";
 import {
   makeRedirectUri,
@@ -112,10 +112,6 @@ export default function Register() {
       // Call the
     }
   }, [authCode]);
-
-  // Bottom sheet setup
-  const termsSheetRef = useRef<BottomSheetMethods>(null);
-  const privacySheetRef = useRef<BottomSheetMethods>(null);
 
   // Handle user return after onboarding into the applicaiton
   useEffect(() => {
@@ -321,8 +317,7 @@ export default function Register() {
                   href="/#"
                   onPress={async (e) => {
                     // Call bottom sheet slider to display terms
-
-                    termsSheetRef.current.open();
+                    WebBrowser.openBrowserAsync("https://");
                   }}
                 >
                   terms of service
@@ -333,7 +328,7 @@ export default function Register() {
                   className="text-[#15BDCF]"
                   href="/#"
                   onPress={async () => {
-                    privacySheetRef.current.open();
+                    WebBrowser.openBrowserAsync("https://");
                   }}
                 >
                   privacy policy
@@ -344,28 +339,6 @@ export default function Register() {
           </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-      <BottomSheet ref={termsSheetRef}>
-        <View className="flex w-full flex-col items-center justify-start p-4">
-          <View>
-            <Text>Terms of service</Text>
-            <Button
-              onPress={() => termsSheetRef.current.close()}
-              title="close"
-            />
-          </View>
-        </View>
-      </BottomSheet>
-      <BottomSheet ref={privacySheetRef}>
-        <View className="flex w-full flex-col items-center justify-start p-4">
-          <View>
-            <Text>Privacy policy</Text>
-            <Button
-              onPress={() => privacySheetRef.current.close()}
-              title="close"
-            />
-          </View>
-        </View>
-      </BottomSheet>
     </SafeAreaView>
   );
 }
