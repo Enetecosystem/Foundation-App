@@ -116,7 +116,7 @@ export default function DashboardPage() {
                           text: "Start",
                           // style: "destructive",
                           onPress: async () => {
-                            // TODO: Delete logic
+                            // DONE✅: Mining logic
                             await triggerMiner({
                               userId:
                                 userDetail?._id ??
