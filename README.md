@@ -1,10 +1,10 @@
-# Enet Miner mobile app
+# Foundation mobile app
 
 Used [Expo Router](https://docs.expo.dev/router/introduction/) with [Nativewind](https://www.nativewind.dev/v4/overview/) styling.
 
 ## 💡 What is the project
 
-Community miner for the enetwallet project, to reward community members for tasks carried out on the platform.
+Foundation is designed to usher newcomers into the dynamic world of Web3. With an emphasis on web3 education, practical experience and Campaigns.
 
 ## ⚙️ Project Architecture
 
